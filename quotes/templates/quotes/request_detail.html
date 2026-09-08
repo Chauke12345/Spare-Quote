@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Your Request | Spare Quote</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 1000px;
+            margin: 40px auto;
+        }
+
+        .page-header {
+            margin-bottom: 28px;
+        }
+
+        .page-header h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 13px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-quoted {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status-quoted {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-accepted {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-expired {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+}
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
+        }
+
+        .card h2 {
+            font-size: 21px;
+            margin-bottom: 18px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .detail-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .detail-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .part-image {
+            margin-top: 20px;
+        }
+
+        .part-image img {
+            width: 100%;
+            max-width: 320px;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            display: block;
+        }
+
+        .quote-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 18px;
+            background: #ffffff;
+        }
+
+        .quote-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .shop-name {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .price {
+            font-size: 28px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .quote-info {
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .quote-info strong {
+            color: #111827;
+        }
+
+        .quote-actions {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-whatsapp {
+            background: #16a34a;
+            color: #ffffff;
+        }
+
+        .btn-whatsapp:hover {
+            background: #15803d;
+        }
+
+        .btn-accept {
+            background: #111827;
+            color: #ffffff;
+        }
+
+        .btn-accept:hover {
+            background: #000000;
+        }
+
+        .accepted-confirmation {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-top: 20px;
+            margin-bottom: 16px;
+            padding: 18px;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            border-radius: 12px;
+            color: #166534;
+        }
+
+        .accepted-icon {
+            width: 38px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            background: #16a34a;
+            color: #ffffff;
+            border-radius: 50%;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .accepted-confirmation h3 {
+            margin-bottom: 4px;
+            font-size: 18px;
+        }
+
+        .accepted-confirmation p {
+            margin: 3px 0;
+        }
+
+        .accepted-whatsapp {
+            margin-top: 5px;
+        }
+
+        .locked {
+            display: inline-block;
+            padding: 10px 14px;
+            background: #f3f4f6;
+            border-radius: 9px;
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+
+        .empty-state {
+            padding: 30px;
+            text-align: center;
+            background: #f9fafb;
+            border-radius: 12px;
+            color: #6b7280;
+        }
+
+        .new-request {
+            display: inline-block;
+            text-decoration: none;
+            background: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #111827;
+            padding: 12px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+        .new-request:hover {
+            background: #f3f4f6;
+        }
+
+        @media (max-width: 700px) {
+
+            .page-wrapper {
+                width: 94%;
+                margin: 25px auto;
+            }
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-top {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .price {
+                font-size: 24px;
+            }
+
+            .quote-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .quote-actions form {
+                width: 100%;
+            }
+
+            .quote-actions form button {
+                width: 100%;
+            }
+
+            .part-image img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .new-request {
+                width: 100%;
+                text-align: center;
+            }
+
+            .accepted-confirmation {
+                flex-direction: column;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="page-wrapper">
+
+        <div class="page-header">
+
+            <h1>
+    Your Spare Part Request
+</h1>
+
+{% if part_request.status == 'accepted' %}
+
+    <span class="status status-accepted">
+        Accepted
+    </span>
+
+{% elif part_request.status == 'quoted' %}
+
+    <span class="status status-quoted">
+        Quoted
+    </span>
+
+{% elif part_request.status == 'expired' %}
+
+    <span class="status status-expired">
+        Expired
+    </span>
+
+{% elif part_request.status == 'completed' %}
+
+    <span class="status status-accepted">
+        Completed
+    </span>
+
+{% else %}
+
+    <span class="status status-pending">
+        Pending
+    </span>
+
+{% endif %}
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Vehicle Details
+            </h2>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <strong>Vehicle</strong>
+
+                    {{ part_request.vehicle_make }}
+                    {{ part_request.vehicle_model }}
+                </div>
+
+                <div class="detail-item">
+                    <strong>Year</strong>
+
+                    {{ part_request.vehicle_year }}
+                </div>
+
+                {% if part_request.engine_details %}
+
+                    <div class="detail-item">
+                        <strong>Engine</strong>
+
+                        {{ part_request.engine_details }}
+                    </div>
+
+                {% endif %}
+
+                {% if part_request.vin_number %}
+
+                    <div class="detail-item">
+                        <strong>VIN</strong>
+
+                        {{ part_request.vin_number }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2>
+                Requested Part
+            </h2>
+
+            <div class="details-grid">
+
+                <div class="detail-item">
+                    <strong>Part</strong>
+
+                    {{ part_request.part_name }}
+                </div>
+
+                {% if part_request.part_description %}
+
+                    <div class="detail-item">
+                        <strong>Description</strong>
+
+                        {{ part_request.part_description }}
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+            {% if part_request.part_image %}
+
+                <div class="part-image">
+
+                    <img
+                        src="{{ part_request.part_image.url }}"
+                        alt="{{ part_request.part_name }}"
+                    >
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+<div class="card">
+
+    <h2>
+        Quotes Received
+    </h2>
+
+    {% if quotes %}
+
+        {% for quote in quotes %}
+
+            <div class="quote-card">
+
+                <div class="quote-top">
+
+                    <div class="shop-name">
+                        {{ quote.shop_name }}
+                    </div>
+
+                    <div class="price">
+                        R{{ quote.price }}
+                    </div>
+
+                </div>
+
+                <p class="quote-info">
+                    <strong>Availability:</strong>
+                    {{ quote.availability }}
+                </p>
+
+                <p class="quote-info">
+                    <strong>Phone:</strong>
+                    {{ quote.shop_phone }}
+                </p>
+
+                {% if quote.notes %}
+
+                    <p class="quote-info">
+                        <strong>Notes:</strong>
+                        {{ quote.notes }}
+                    </p>
+
+                {% endif %}
+
+
+                {% if quote.is_accepted %}
+
+                    <div class="accepted-confirmation">
+
+                        <div class="accepted-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <h3>
+                                Quote Accepted
+                            </h3>
+
+                            <p>
+                                You selected
+                                <strong>{{ quote.shop_name }}</strong>
+                                for this spare part request.
+                            </p>
+
+                            <p>
+                                Accepted price:
+                                <strong>R{{ quote.price }}</strong>
+                            </p>
+
+                            <p>
+                                You can now contact the shop to arrange
+                                collection, delivery or payment.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <a
+                        class="btn btn-whatsapp accepted-whatsapp"
+                        href="https://wa.me/27{{ quote.shop_phone|slice:'1:' }}"
+                        target="_blank"
+                    >
+                        WhatsApp {{ quote.shop_name }}
+                    </a>
+
+
+                {% elif part_request.status == 'accepted' %}
+
+                    <div class="locked">
+                        Another quotation was selected for this request.
+                    </div>
+
+
+                {% elif part_request.status == 'expired' %}
+
+                    <div class="locked">
+                        Request Expired — quotations can no longer be accepted.
+                    </div>
+
+
+                {% elif part_request.status == 'completed' %}
+
+                    <div class="locked">
+                        This request has been completed.
+                    </div>
+
+
+                {% elif quote.quote_round != part_request.request_round %}
+
+                    <div class="locked">
+                        Awaiting updated quotation from this shop.
+                    </div>
+
+
+                {% else %}
+
+                    <div class="quote-actions">
+
+                        <a
+                            class="btn btn-whatsapp"
+                            href="https://wa.me/27{{ quote.shop_phone|slice:'1:' }}"
+                            target="_blank"
+                        >
+                            WhatsApp Shop
+                        </a>
+
+                        <form
+    method="POST"
+    action="{% url 'accept_quote' part_request.public_id quote.id %}"
+>
+                        
+                            {% csrf_token %}
+
+                            <button
+                                class="btn btn-accept"
+                                type="submit"
+                            >
+                                Accept Quote
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="empty-state">
+
+            No quotations have been received yet.
+
+            <br>
+
+            Please check again later.
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+        
+       {% if part_request.status == 'expired' %}
+
+    <form
+        method="POST"
+        action="{% url 'reopen_request' part_request.pk %}"
+        style="margin-bottom: 12px;"
+    >
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="btn btn-accept"
+        >
+            ↻ Reopen Request for 24 Hours
+        </button>
+
+    </form>
+
+{% endif %}
+
+
+<a
+    class="new-request"
+    href="/"
+>
+    Request Another Part
+</a>
+
+</body>
+
+</html>

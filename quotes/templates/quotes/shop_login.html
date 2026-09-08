@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Shop Login | Spare Quote</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+        }
+
+        .page-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 460px;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 36px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .login-card h1 {
+            margin: 0 0 10px;
+            font-size: 30px;
+        }
+
+        .intro {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .form-group input:focus {
+            border-color: #111827;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .login-btn {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            background: #111827;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #000000;
+        }
+
+        .register-text {
+            text-align: center;
+            margin-top: 22px;
+            color: #6b7280;
+        }
+
+        .register-text a,
+        .back-link {
+            color: #111827;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .register-text a:hover,
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+    <div class="login-card">
+
+        <h1>Shop Login</h1>
+
+        <p class="intro">
+            Sign in to your Spare Quote shop account to view
+            customer part requests and send quotations.
+        </p>
+
+        {% if error_message %}
+            <div class="error-message">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="username">Username</label>
+
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    placeholder="Enter your username"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                >
+            </div>
+
+            <button
+                type="submit"
+                class="login-btn"
+            >
+                Login to Dashboard
+            </button>
+
+        </form>
+
+        <p class="register-text">
+            Don't have a shop account?
+            <a href="{% url 'shop_register' %}">
+                Register your shop
+            </a>
+        </p>
+
+        <a
+            href="{% url 'request_part' %}"
+            class="back-link"
+        >
+            ← Back to Spare Quote
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+</html>

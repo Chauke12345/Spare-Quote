@@ -1,0 +1,1160 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Shop Dashboard | SpareQuote</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 1100px;
+            margin: 40px auto;
+        }
+
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+
+        .page-header h1 {
+            font-size: 34px;
+            margin-bottom: 6px;
+        }
+
+
+        .page-header p {
+            color: #6b7280;
+            margin-bottom: 4px;
+        }
+
+
+        .shop-name {
+            color: #111827;
+        }
+
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+
+        .notification-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #fff7ed;
+            color: #9a3412;
+            border: 1px solid #fed7aa;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+
+        .notification-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 24px;
+            height: 24px;
+            padding: 0 7px;
+            background: #ea580c;
+            color: #ffffff;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+
+        .logout-btn {
+            display: inline-block;
+            text-decoration: none;
+            background: #ffffff;
+            color: #111827;
+            border: 1px solid #d1d5db;
+            padding: 10px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+
+        .logout-btn:hover {
+            background: #f3f4f6;
+        }
+
+
+        /* =========================
+           SECTION HEADER
+        ========================= */
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 16px;
+        }
+
+
+        .section-header h2 {
+            font-size: 23px;
+        }
+
+
+        .section-note {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           OPEN REQUEST
+        ========================= */
+
+        .request-row {
+            background: #ffffff;
+            border-radius: 14px;
+            margin-bottom: 14px;
+            overflow: hidden;
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+        }
+
+
+        .request-row-new {
+            border-left: 5px solid #f59e0b;
+        }
+
+
+        .request-summary {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 20px;
+            padding: 18px 20px;
+            cursor: pointer;
+            list-style: none;
+        }
+
+
+        .request-summary::-webkit-details-marker {
+            display: none;
+        }
+
+
+        .request-main {
+            min-width: 0;
+        }
+
+
+        .request-number {
+            display: block;
+            font-size: 12px;
+            color: #6b7280;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+
+        .request-title {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+
+        .request-part {
+            color: #4b5563;
+            font-size: 14px;
+            margin-top: 2px;
+        }
+
+
+        .request-meta {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+
+        .request-meta strong {
+            color: #374151;
+        }
+
+
+        .request-status-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+
+
+        /* =========================
+           STATUS
+        ========================= */
+
+        .status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+
+        .status-new {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+
+        .status-quoted {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+
+        .status-accepted {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+
+        .status-expired {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+
+        /* =========================
+           VIEW / CLOSE TEXT
+        ========================= */
+
+        .view-label {
+            color: #374151;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+
+        .request-row[open] .view-label,
+        .history-row[open] .view-label {
+            font-size: 0;
+        }
+
+
+        .request-row[open] .view-label::after,
+        .history-row[open] .view-label::after {
+            content: "Close Request";
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           EXPANDED DETAILS
+        ========================= */
+
+        .request-content {
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+
+        .detail-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+
+        .detail-item strong {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6b7280;
+        }
+
+
+        .description-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+        }
+
+
+        .description-box strong {
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+
+        .part-image {
+            margin-bottom: 18px;
+        }
+
+
+        .part-image img {
+            display: block;
+            width: 220px;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .quote-btn {
+            display: inline-block;
+            padding: 12px 17px;
+            background: #111827;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+
+       .quote-btn:hover {
+    background: #000000;
+}
+
+.update-quote-btn {
+    display: inline-block;
+    padding: 12px 17px;
+    background: #d97706;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 9px;
+    font-weight: 700;
+}
+
+.update-quote-btn:hover {
+    background: #b45309;
+}
+
+.status-update {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+
+        .quote-submitted {
+            display: inline-block;
+            padding: 11px 15px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+
+        .closed-label {
+            display: inline-block;
+            padding: 11px 15px;
+            background: #f3f4f6;
+            color: #6b7280;
+            border-radius: 9px;
+            font-weight: 700;
+        }
+
+
+       /* =========================
+   HISTORY
+========================= */
+
+.history-section {
+    margin-top: 45px;
+}
+
+.history-row {
+    background: #ffffff;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    border: 1px solid #e5e7eb;
+}
+
+.history-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 20px;
+    padding: 15px 18px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.history-summary::-webkit-details-marker {
+    display: none;
+}
+
+.history-content {
+    padding: 18px;
+    border-top: 1px solid #e5e7eb;
+}
+
+
+/* =========================
+   EMPTY STATE
+========================= */
+
+.empty-state {
+    background: #ffffff;
+    padding: 30px;
+    text-align: center;
+    border-radius: 14px;
+    color: #6b7280;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.04);
+}
+
+
+/* =========================
+   HISTORY FILTERS
+========================= */
+
+.history-filters {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.history-filter-btn {
+    text-decoration: none;
+    background: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.history-filter-btn:hover {
+    background: #f3f4f6;
+}
+
+.history-filter-btn.active {
+    background: #111827;
+    color: #ffffff;
+    border-color: #111827;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 750px) {
+
+            .page-wrapper {
+                width: 94%;
+                margin: 24px auto;
+            }
+
+
+            .page-header {
+                flex-direction: column;
+            }
+
+
+            .page-header h1 {
+                font-size: 28px;
+            }
+
+
+            .header-actions {
+                width: 100%;
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+
+            .notification-box,
+            .logout-btn {
+                width: 100%;
+                justify-content: center;
+                text-align: center;
+            }
+
+
+            .request-summary,
+            .history-summary {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+
+
+            .request-status-area {
+                justify-content: space-between;
+                width: 100%;
+            }
+
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .part-image img {
+                width: 100%;
+                max-width: 320px;
+                height: auto;
+            }
+
+
+            .quote-btn,
+            .quote-submitted,
+            .closed-label {
+                width: 100%;
+                text-align: center;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page-wrapper">
+
+
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Shop Dashboard
+            </h1>
+
+            <p>
+                Welcome,
+                <strong class="shop-name">
+                    {{ request.user.shop_profile.shop_name }}
+                </strong>
+            </p>
+
+            <p>
+                Manage active spare-part requests
+                and quotations.
+            </p>
+
+        </div>
+
+
+        <div class="header-actions">
+<div class="notification-box">
+    🔔 Requests Needing Action
+
+    <span class="notification-count">
+        {{ new_request_count }}
+    </span>
+</div>
+
+
+            <a
+                href="{% url 'shop_logout' %}"
+                class="logout-btn"
+            >
+                Logout
+            </a>
+
+        </div>
+
+    </div>
+
+
+<!-- =========================
+     OPEN REQUESTS
+========================== -->
+
+<div class="section-header">
+
+    <div>
+
+        <h2>
+            Open Requests
+        </h2>
+
+        <div class="section-note">
+            Click a request to view full details.
+        </div>
+
+    </div>
+
+</div>
+
+
+{% if open_requests %}
+
+    {% for part_request in open_requests %}
+
+        <details
+            class="request-row {% if part_request.id not in quoted_request_ids %}request-row-new{% endif %}"
+        >
+
+            <summary class="request-summary">
+
+
+                <div class="request-main">
+
+                    <span class="request-number">
+                        Request #{{ part_request.id }}
+                    </span>
+
+                    <div class="request-title">
+                        {{ part_request.vehicle_make }}
+                        {{ part_request.vehicle_model }}
+                    </div>
+
+                    <div class="request-part">
+                        {{ part_request.part_name }}
+                    </div>
+
+                </div>
+
+
+                <div class="request-meta">
+
+                    <div>
+                        <strong>Location:</strong>
+                        {{ part_request.location }}
+                    </div>
+
+                    <div>
+                        {{ part_request.created_at|date:"d M Y, H:i" }}
+                    </div>
+
+                </div>
+
+
+                <div class="request-status-area">
+
+                    {% if part_request.id in quoted_request_ids %}
+
+                        <span class="status status-quoted">
+                            Quote Submitted
+                        </span>
+
+                    {% elif part_request.id in update_quote_request_ids %}
+
+                        <span class="status status-update">
+                            Update Quote
+                        </span>
+
+                    {% else %}
+
+                        <span class="status status-new">
+                            New
+                        </span>
+
+                    {% endif %}
+
+
+                    <span class="view-label">
+                        View Request
+                    </span>
+
+                </div>
+
+
+            </summary>
+
+
+            <div class="request-content">
+
+
+                <div class="details-grid">
+
+
+                    <div class="detail-item">
+
+                        <strong>
+                            Year
+                        </strong>
+
+                        {{ part_request.vehicle_year }}
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <strong>
+                            Part Needed
+                        </strong>
+
+                        {{ part_request.part_name }}
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <strong>
+                            Location
+                        </strong>
+
+                        {{ part_request.location }}
+
+                    </div>
+
+
+                    {% if part_request.engine_details %}
+
+                        <div class="detail-item">
+
+                            <strong>
+                                Engine
+                            </strong>
+
+                            {{ part_request.engine_details }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if part_request.vin_number %}
+
+                        <div class="detail-item">
+
+                            <strong>
+                                VIN
+                            </strong>
+
+                            {{ part_request.vin_number }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+                {% if part_request.part_description %}
+
+                    <div class="description-box">
+
+                        <strong>
+                            Description
+                        </strong>
+
+                        {{ part_request.part_description }}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if part_request.part_image %}
+
+                    <div class="part-image">
+
+                        <img
+                            src="{{ part_request.part_image.url }}"
+                            alt="{{ part_request.part_name }}"
+                        >
+
+                    </div>
+
+                {% endif %}
+
+
+                {% if part_request.id in quoted_request_ids %}
+
+                    <span class="quote-submitted">
+                        Quote Submitted ✓
+                    </span>
+
+                {% elif part_request.id in update_quote_request_ids %}
+
+                    <a
+                        class="update-quote-btn"
+                        href="{% url 'submit_quote' part_request.id %}"
+                    >
+                        Update Quote
+                    </a>
+
+                {% else %}
+
+                    <a
+                        class="quote-btn"
+                        href="{% url 'submit_quote' part_request.id %}"
+                    >
+                        Send Quote
+                    </a>
+
+                {% endif %}
+
+
+            </div>
+
+        </details>
+
+    {% endfor %}
+
+
+{% else %}
+
+    <div class="empty-state">
+        No open requests are available right now.
+    </div>
+
+{% endif %}
+   <!-- =========================
+     REQUEST HISTORY
+========================== -->
+
+<div class="history-section">
+
+    <div class="section-header">
+
+        <div>
+            <h2>
+                Request History
+            </h2>
+
+            <div class="section-note">
+                Closed and expired requests.
+            </div>
+        </div>
+
+
+        <!-- HISTORY DATE FILTERS -->
+
+        <div class="history-filters">
+
+            <a
+                href="?history=today"
+                class="history-filter-btn {% if history_filter == 'today' %}active{% endif %}"
+            >
+                Today
+            </a>
+
+            <a
+                href="?history=7"
+                class="history-filter-btn {% if history_filter == '7' %}active{% endif %}"
+            >
+                7 Days
+            </a>
+
+            <a
+                href="?history=30"
+                class="history-filter-btn {% if history_filter == '30' %}active{% endif %}"
+            >
+                30 Days
+            </a>
+
+            <a
+                href="?history=all"
+                class="history-filter-btn {% if history_filter == 'all' %}active{% endif %}"
+            >
+                All
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         HISTORY RESULTS
+    ========================== -->
+
+    {% if request_history %}
+
+        {% for part_request in request_history %}
+
+            <details class="history-row">
+
+                <summary class="history-summary">
+
+
+                    <!-- REQUEST -->
+
+                    <div class="request-main">
+
+                        <span class="request-number">
+                            Request #{{ part_request.id }}
+                        </span>
+
+                        <div class="request-title">
+                            {{ part_request.vehicle_make }}
+                            {{ part_request.vehicle_model }}
+                        </div>
+
+                        <div class="request-part">
+                            {{ part_request.part_name }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- LOCATION / DATE -->
+
+                    <div class="request-meta">
+
+                        <div>
+                            <strong>Location:</strong>
+                            {{ part_request.location }}
+                        </div>
+
+                        <div>
+                            {{ part_request.created_at|date:"d M Y, H:i" }}
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="request-status-area">
+
+                        {% if part_request.status == 'accepted' %}
+
+                            <span class="status status-accepted">
+                                Quote Closed
+                            </span>
+
+                        {% elif part_request.status == 'expired' %}
+
+                            <span class="status status-expired">
+                                Expired
+                            </span>
+
+                        {% elif part_request.status == 'completed' %}
+
+                            <span class="status status-accepted">
+                                Completed
+                            </span>
+
+                        {% endif %}
+
+
+                        <span class="view-label">
+                            View Request
+                        </span>
+
+                    </div>
+
+                </summary>
+
+
+                <!-- =========================
+                     EXPANDED REQUEST DETAILS
+                ========================== -->
+
+                <div class="history-content">
+
+
+                    <div class="details-grid">
+
+
+                        <div class="detail-item">
+
+                            <strong>
+                                Year
+                            </strong>
+
+                            {{ part_request.vehicle_year }}
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <strong>
+                                Part Needed
+                            </strong>
+
+                            {{ part_request.part_name }}
+
+                        </div>
+
+
+                        <div class="detail-item">
+
+                            <strong>
+                                Location
+                            </strong>
+
+                            {{ part_request.location }}
+
+                        </div>
+
+
+                        {% if part_request.engine_details %}
+
+                            <div class="detail-item">
+
+                                <strong>
+                                    Engine
+                                </strong>
+
+                                {{ part_request.engine_details }}
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if part_request.vin_number %}
+
+                            <div class="detail-item">
+
+                                <strong>
+                                    VIN
+                                </strong>
+
+                                {{ part_request.vin_number }}
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    {% if part_request.part_description %}
+
+                        <div class="description-box">
+
+                            <strong>
+                                Description
+                            </strong>
+
+                            {{ part_request.part_description }}
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- PART IMAGE -->
+
+                    {% if part_request.part_image %}
+
+                        <div class="part-image">
+
+                            <img
+                                src="{{ part_request.part_image.url }}"
+                                alt="{{ part_request.part_name }}"
+                            >
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- FINAL STATUS -->
+
+                    {% if part_request.status == 'accepted' %}
+
+                        <span class="closed-label">
+                            Quote Closed
+                        </span>
+
+                    {% elif part_request.status == 'expired' %}
+
+                        <span class="closed-label">
+                            Request Expired
+                        </span>
+
+                    {% elif part_request.status == 'completed' %}
+
+                        <span class="closed-label">
+                            Completed
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </details>
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="empty-state">
+            No requests found for this period.
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+</div>
+
+
+</body>
+
+</html>
+```
