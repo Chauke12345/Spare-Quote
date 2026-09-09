@@ -1,20 +1,481 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Request Submitted | Spare Quote</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Request Submitted | SpareQuote</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+
+            background: #f3f6f9;
+            color: #1f2937;
+
+            line-height: 1.6;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 30px 20px;
+        }
+
+        .page-wrapper {
+            width: 100%;
+            max-width: 650px;
+        }
+
+        /* =========================
+           BRAND
+        ========================= */
+
+        .brand {
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        .brand-badge {
+            display: inline-block;
+
+            background: #e8f1ff;
+            color: #1d4ed8;
+
+            padding: 7px 14px;
+
+            border-radius: 999px;
+
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           SUCCESS CARD
+        ========================= */
+
+        .success-card {
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 20px;
+
+            padding: 42px 38px;
+
+            text-align: center;
+
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+        }
+
+        .success-icon {
+            width: 70px;
+            height: 70px;
+
+            margin: 0 auto 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #dcfce7;
+            color: #16a34a;
+
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .success-card h1 {
+            color: #111827;
+
+            font-size: 31px;
+            line-height: 1.2;
+
+            margin-bottom: 13px;
+        }
+
+        .success-message {
+            color: #6b7280;
+
+            font-size: 15px;
+
+            max-width: 500px;
+
+            margin: 0 auto;
+        }
+
+        /* =========================
+           NEXT STEP
+        ========================= */
+
+        .next-step {
+            margin-top: 28px;
+
+            padding: 18px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+
+            text-align: left;
+        }
+
+        .next-step-title {
+            font-size: 13px;
+            font-weight: 700;
+
+            color: #111827;
+
+            margin-bottom: 8px;
+        }
+
+        .next-step p {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =========================
+           PROCESS
+        ========================= */
+
+        .process {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 10px;
+
+            margin-top: 22px;
+        }
+
+        .process-item {
+            padding: 14px 8px;
+
+            background: #f9fafb;
+
+            border-radius: 10px;
+
+            font-size: 12px;
+
+            color: #6b7280;
+        }
+
+        .process-icon {
+            display: block;
+
+            font-size: 21px;
+
+            margin-bottom: 5px;
+        }
+
+        .process-item strong {
+            display: block;
+
+            color: #374151;
+
+            font-size: 12px;
+
+            margin-bottom: 2px;
+        }
+
+        /* =========================
+           ACTIONS
+        ========================= */
+
+        .actions {
+            display: flex;
+
+            gap: 10px;
+
+            margin-top: 28px;
+        }
+
+        .btn {
+            flex: 1;
+
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+
+            text-decoration: none;
+
+            padding: 13px 18px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+            font-weight: 700;
+
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #111827;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: #000000;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            color: #111827;
+
+            border: 1px solid #d1d5db;
+        }
+
+        .btn-secondary:hover {
+            background: #f3f4f6;
+        }
+
+        /* =========================
+           FOOT NOTE
+        ========================= */
+
+        .foot-note {
+            margin-top: 18px;
+
+            color: #9ca3af;
+
+            font-size: 11px;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                align-items: flex-start;
+                padding: 24px 15px;
+            }
+
+            .success-card {
+                padding: 32px 20px;
+            }
+
+            .success-card h1 {
+                font-size: 26px;
+            }
+
+            .process {
+                grid-template-columns: 1fr;
+            }
+
+            .process-item {
+                text-align: left;
+
+                display: flex;
+                align-items: center;
+
+                gap: 12px;
+
+                padding: 12px 14px;
+            }
+
+            .process-icon {
+                margin-bottom: 0;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+        }
+
+    </style>
+
 </head>
+
+
 <body>
 
-    <h1>Request Submitted Successfully ✅</h1>
 
-    <p>
-        Your spare part request has been received.
-        Spare shops will be able to review your request and send you a quotation.
-    </p>
+<div class="page-wrapper">
 
-    <a href="/">Request Another Part</a>
+
+    <!-- BRAND -->
+
+    <div class="brand">
+
+        <span class="brand-badge">
+            SpareQuote
+        </span>
+
+    </div>
+
+
+
+    <!-- SUCCESS CARD -->
+
+    <div class="success-card">
+
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+
+        <h1>
+            Request Submitted Successfully
+        </h1>
+
+
+        <p class="success-message">
+            Your spare-part request has been received.
+            Participating spare-parts shops can now review your request
+            and send you quotations.
+        </p>
+
+
+
+        <!-- WHAT HAPPENS NEXT -->
+
+        <div class="next-step">
+
+            <div class="next-step-title">
+                What happens next?
+            </div>
+
+            <p>
+                Shops will review your vehicle and part details.
+                Once quotations are submitted, you can compare the
+                prices and choose the offer that works best for you.
+            </p>
+
+        </div>
+
+
+
+        <!-- PROCESS -->
+
+        <div class="process">
+
+
+            <div class="process-item">
+
+                <span class="process-icon">
+                    🔧
+                </span>
+
+                <div>
+
+                    <strong>
+                        Shops Review
+                    </strong>
+
+                    Your request is reviewed.
+
+                </div>
+
+            </div>
+
+
+            <div class="process-item">
+
+                <span class="process-icon">
+                    💰
+                </span>
+
+                <div>
+
+                    <strong>
+                        Receive Quotes
+                    </strong>
+
+                    Shops send their prices.
+
+                </div>
+
+            </div>
+
+
+            <div class="process-item">
+
+                <span class="process-icon">
+                    ✓
+                </span>
+
+                <div>
+
+                    <strong>
+                        Choose a Quote
+                    </strong>
+
+                    Select your preferred shop.
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- ACTIONS -->
+
+        <div class="actions">
+
+
+            {% if part_request %}
+
+                <a
+                    class="btn btn-primary"
+                    href="{% url 'request_detail' part_request.public_id %}"
+                >
+                    View My Request
+                </a>
+
+            {% endif %}
+
+
+            <a
+    class="btn {% if part_request %}btn-secondary{% else %}btn-primary{% endif %}"
+    href="{% url 'request_part' %}"
+>
+    Request Another Part
+</a>
+
+<a
+    href="{% url 'request_detail' public_id=public_id %}"
+    class="btn"
+>
+    View My Request
+</a>
+
+
+        <p class="foot-note">
+            Keep your request page available so you can return and check for new quotations.
+        </p>
+
+
+    </div>
+
+
+</div>
+
 
 </body>
+
 </html>

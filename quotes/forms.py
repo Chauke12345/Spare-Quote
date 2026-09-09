@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import PartRequest, Quote
+from .models import PartRequest, Quote, Review
 
 
 class PartRequestForm(forms.ModelForm):
@@ -68,6 +68,48 @@ class PartRequestForm(forms.ModelForm):
             }),
         }
 
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get('phone_number', '')
+
+        # Remove common formatting characters
+        cleaned = (
+            phone_number
+            .replace(' ', '')
+            .replace('-', '')
+            .replace('(', '')
+            .replace(')', '')
+        )
+
+        # Convert +27 format to local 0 format
+        if cleaned.startswith('+27'):
+            local_number = '0' + cleaned[3:]
+
+        # Convert 27 format to local 0 format
+        elif cleaned.startswith('27'):
+            local_number = '0' + cleaned[2:]
+
+        else:
+            local_number = cleaned
+
+        # Must contain digits only
+        if not local_number.isdigit():
+            raise forms.ValidationError(
+                'Please enter a valid phone number.'
+            )
+
+        # South African local numbers should have 10 digits
+        if len(local_number) != 10:
+            raise forms.ValidationError(
+                'Please enter a valid 10-digit South African phone number, e.g. 071 234 5678.'
+            )
+
+        # Local format must begin with 0
+        if not local_number.startswith('0'):
+            raise forms.ValidationError(
+                'Please enter a valid South African phone number.'
+            )
+
+        return local_number
 
 class QuoteForm(forms.ModelForm):
     class Meta:
@@ -91,6 +133,35 @@ class QuoteForm(forms.ModelForm):
 
             'notes': forms.Textarea(attrs={
                 'placeholder': 'e.g. Front brake pad set available for collection today.'
+            }),
+        }
+class ReviewForm(forms.ModelForm):
+
+    RATING_CHOICES = [
+        (5, '5 - Excellent'),
+        (4, '4 - Very Good'),
+        (3, '3 - Good'),
+        (2, '2 - Fair'),
+        (1, '1 - Poor'),
+    ]
+
+    rating = forms.ChoiceField(
+        choices=RATING_CHOICES,
+        widget=forms.RadioSelect
+    )
+
+    class Meta:
+        model = Review
+
+        fields = [
+            'rating',
+            'comment',
+        ]
+
+        widgets = {
+            'comment': forms.Textarea(attrs={
+                'placeholder': 'Tell us about your experience with the shop...',
+                'rows': 4
             }),
         }
 
@@ -153,3 +224,19 @@ class ShopRegistrationForm(forms.Form):
             )
 
         return username
+class TrackRequestForm(forms.Form):
+
+    request_id = forms.IntegerField(
+        label='Request Number',
+        widget=forms.NumberInput(attrs={
+            'placeholder': 'Example: 16'
+        })
+    )
+
+    phone_number = forms.CharField(
+        label='Phone Number',
+        max_length=20,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Example: 0712345678'
+        })
+    )

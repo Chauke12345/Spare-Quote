@@ -27,3 +27,5 @@ Desktop.ini
 
 # Logs
 *.log
+# Collected production static files
+staticfiles/

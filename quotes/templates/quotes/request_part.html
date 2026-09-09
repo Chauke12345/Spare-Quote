@@ -1,329 +1,607 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Request a Part | Spare Quote</title>
+```
+<title>Request a Part | SpareQuote</title>
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #1f2937;
-            line-height: 1.6;
-        }
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f3f6f9;
+        color: #1f2937;
+        line-height: 1.6;
+    }
 
+    .page-wrapper {
+        width: 92%;
+        max-width: 960px;
+        margin: 45px auto 70px;
+    }
+
+    /* =========================
+       PAGE HEADER
+    ========================= */
+
+    .header {
+        text-align: center;
+        margin-bottom: 32px;
+    }
+
+    .header-badge {
+        display: inline-block;
+        background: #e8f1ff;
+        color: #1d4ed8;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 7px 14px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+    }
+
+    .header h1 {
+        font-size: 42px;
+        line-height: 1.15;
+        margin-bottom: 14px;
+        color: #111827;
+    }
+
+    .header p {
+        color: #6b7280;
+        max-width: 660px;
+        margin: 0 auto;
+        font-size: 16px;
+    }
+
+    /* =========================
+       FORM CARD
+    ========================= */
+
+    .form-card {
+        background: #ffffff;
+        padding: 42px;
+        border-radius: 20px;
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    .form-section {
+        margin-bottom: 38px;
+    }
+
+    .form-section:last-of-type {
+        margin-bottom: 30px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        background: #f1f5f9;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        flex-shrink: 0;
+    }
+
+    .section-heading h2 {
+        font-size: 20px;
+        color: #111827;
+    }
+
+    .section-heading p {
+        font-size: 13px;
+        color: #6b7280;
+        margin-top: 2px;
+    }
+
+    /* =========================
+       FORM GRID
+    ========================= */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 22px;
+    }
+
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    label {
+        font-weight: 700;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #374151;
+    }
+
+    input,
+    textarea,
+    select {
+        width: 100%;
+        padding: 13px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        font-size: 15px;
+        color: #111827;
+        background: #ffffff;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+    }
+
+    input:hover,
+    textarea:hover,
+    select:hover {
+        border-color: #9ca3af;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+        outline: none;
+        border-color: #2563eb;
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+        background: #ffffff;
+    }
+
+    textarea {
+        min-height: 125px;
+        resize: vertical;
+    }
+
+    input[type="file"] {
+        padding: 10px;
+        background: #f9fafb;
+        cursor: pointer;
+    }
+
+    input[type="file"]::file-selector-button {
+        border: none;
+        background: #111827;
+        color: #ffffff;
+        padding: 9px 14px;
+        border-radius: 7px;
+        margin-right: 12px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    input[type="file"]::file-selector-button:hover {
+        background: #000000;
+    }
+
+    .help-text {
+        margin-top: 7px;
+        font-size: 12.5px;
+        color: #6b7280;
+    }
+
+    /* =========================
+       ERRORS
+    ========================= */
+
+    .errorlist {
+        list-style: none;
+        color: #b91c1c;
+        font-size: 13px;
+        margin-bottom: 7px;
+        background: #fef2f2;
+        padding: 7px 10px;
+        border-radius: 7px;
+        border: 1px solid #fecaca;
+    }
+
+    /* =========================
+       SUBMIT AREA
+    ========================= */
+
+    .submit-area {
+        margin-top: 8px;
+        padding-top: 26px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .submit-btn {
+        width: 100%;
+        border: none;
+        background: #111827;
+        color: #ffffff;
+        padding: 16px 20px;
+        border-radius: 11px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+            transform 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .submit-btn:hover {
+        background: #000000;
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(17, 24, 39, 0.16);
+    }
+
+    .submit-btn:active {
+        transform: translateY(0);
+    }
+
+    .submit-note {
+        text-align: center;
+        margin-top: 11px;
+        color: #6b7280;
+        font-size: 12px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 700px) {
         .page-wrapper {
-            width: 92%;
-            max-width: 900px;
-            margin: 50px auto;
+            width: 94%;
+            margin: 25px auto 45px;
         }
 
         .header {
-            text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
         }
 
         .header h1 {
-            font-size: 38px;
-            margin-bottom: 10px;
+            font-size: 31px;
         }
 
         .header p {
-            color: #6b7280;
-            max-width: 650px;
-            margin: 0 auto;
+            font-size: 14px;
         }
 
         .form-card {
-            background: #ffffff;
-            padding: 35px;
+            padding: 24px 18px;
             border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        }
-
-        .form-section {
-            margin-bottom: 35px;
-        }
-
-        .form-section h2 {
-            font-size: 20px;
-            margin-bottom: 18px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #e5e7eb;
         }
 
         .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 20px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: 1fr;
+            gap: 18px;
         }
 
         .form-group.full-width {
-            grid-column: 1 / -1;
+            grid-column: auto;
         }
 
-        label {
-            font-weight: 600;
-            margin-bottom: 7px;
+        .section-heading {
+            align-items: flex-start;
+        }
+
+        .section-icon {
+            width: 38px;
+            height: 38px;
+            font-size: 18px;
+        }
+
+        .section-heading h2 {
+            font-size: 18px;
         }
 
         input,
         textarea,
         select {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 9px;
-            font-size: 15px;
-            background: #ffffff;
-        }
-
-        input:focus,
-        textarea:focus,
-        select:focus {
-            outline: none;
-            border-color: #111827;
-        }
-
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
-
-        .help-text {
-            margin-top: 5px;
-            font-size: 13px;
-            color: #6b7280;
+            font-size: 16px;
         }
 
         .submit-btn {
-            width: 100%;
-            border: none;
-            background: #111827;
-            color: #ffffff;
             padding: 15px;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
         }
+    }
+</style>
+```
 
-        .submit-btn:hover {
-            background: #000000;
-        }
-
-        .errorlist {
-            list-style: none;
-            color: #b91c1c;
-            font-size: 14px;
-            margin-bottom: 5px;
-        }
-
-        @media (max-width: 700px) {
-            .page-wrapper {
-                margin: 25px auto;
-            }
-
-            .header h1 {
-                font-size: 30px;
-            }
-
-            .form-card {
-                padding: 22px;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .form-group.full-width {
-                grid-column: auto;
-            }
-        }
-    </style>
 </head>
 
 <body>
 
-    <div class="page-wrapper">
+```
+<div class="page-wrapper">
 
-        <div class="header">
-            <h1>Find Your Spare Part</h1>
+    <div class="header">
 
-            <p>
-                Tell us what part you need once.
-                Spare shops can review your request and send you quotations.
-            </p>
+        <div class="header-badge">
+            SpareQuote
         </div>
 
-        <div class="form-card">
+        <h1>Find Your Spare Part</h1>
 
-            <form method="POST" enctype="multipart/form-data">
-                {% csrf_token %}
+        <p>
+            Tell us what part you need once.
+            Local spare-parts shops can review your request
+            and send you quotes.
+        </p>
 
-                <div class="form-section">
-                    <h2>Customer Details</h2>
+    </div>
 
-                    <div class="form-grid">
 
-                        <div class="form-group">
-                            <label for="{{ form.customer_name.id_for_label }}">
-                                Your Name
-                            </label>
+    <div class="form-card">
 
-                            {{ form.customer_name.errors }}
-                            {{ form.customer_name }}
-                        </div>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
-                        <div class="form-group">
-                            <label for="{{ form.phone_number.id_for_label }}">
-                                Phone Number
-                            </label>
 
-                            {{ form.phone_number.errors }}
-                            {{ form.phone_number }}
-                        </div>
+            <!-- CUSTOMER DETAILS -->
 
-                        <div class="form-group full-width">
-                            <label for="{{ form.location.id_for_label }}">
-                                Your Location
-                            </label>
+            <div class="form-section">
 
-                            {{ form.location.errors }}
-                            {{ form.location }}
-                        </div>
+                <div class="section-heading">
 
+                    <div class="section-icon">
+                        👤
                     </div>
+
+                    <div>
+                        <h2>Customer Details</h2>
+                        <p>Tell the shop where and how to reach you.</p>
+                    </div>
+
                 </div>
 
 
-                <div class="form-section">
-                    <h2>Vehicle Details</h2>
+                <div class="form-grid">
 
-                    <div class="form-grid">
+                    <div class="form-group">
 
-                        <div class="form-group">
-                            <label for="{{ form.vehicle_make.id_for_label }}">
-                                Vehicle Make
-                            </label>
+                        <label for="{{ form.customer_name.id_for_label }}">
+                            Your Name
+                        </label>
 
-                            {{ form.vehicle_make.errors }}
-                            {{ form.vehicle_make }}
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.vehicle_model.id_for_label }}">
-                                Vehicle Model
-                            </label>
-
-                            {{ form.vehicle_model.errors }}
-                            {{ form.vehicle_model }}
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.vehicle_year.id_for_label }}">
-                                Vehicle Year
-                            </label>
-
-                            {{ form.vehicle_year.errors }}
-                            {{ form.vehicle_year }}
-                        </div>
-
-                        <div class="form-group">
-                            <label for="{{ form.engine_details.id_for_label }}">
-                                Engine Details
-                            </label>
-
-                            {{ form.engine_details.errors }}
-                            {{ form.engine_details }}
-
-                            <span class="help-text">
-                                Example: 1.6 petrol, 2.0 TDI
-                            </span>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="{{ form.vin_number.id_for_label }}">
-                                VIN Number
-                            </label>
-
-                            {{ form.vin_number.errors }}
-                            {{ form.vin_number }}
-
-                            <span class="help-text">
-                                Optional. Usually a 17-character vehicle identification number.
-                            </span>
-                        </div>
+                        {{ form.customer_name.errors }}
+                        {{ form.customer_name }}
 
                     </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.phone_number.id_for_label }}">
+                            Phone Number
+                        </label>
+
+                        {{ form.phone_number.errors }}
+                        {{ form.phone_number }}
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.location.id_for_label }}">
+                            Your Location
+                        </label>
+
+                        {{ form.location.errors }}
+                        {{ form.location }}
+
+                        <span class="help-text">
+                            Example: Randburg, Sandton or Pretoria.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- VEHICLE DETAILS -->
+
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        🚗
+                    </div>
+
+                    <div>
+                        <h2>Vehicle Details</h2>
+                        <p>Help the shop identify the correct part for your vehicle.</p>
+                    </div>
+
                 </div>
 
 
-                <div class="form-section">
-                    <h2>Part Details</h2>
+                <div class="form-grid">
 
-                    <div class="form-grid">
+                    <div class="form-group">
 
-                        <div class="form-group full-width">
-                            <label for="{{ form.part_name.id_for_label }}">
-                                Part Needed
-                            </label>
+                        <label for="{{ form.vehicle_make.id_for_label }}">
+                            Vehicle Make
+                        </label>
 
-                            {{ form.part_name.errors }}
-                            {{ form.part_name }}
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="{{ form.part_description.id_for_label }}">
-                                Description
-                            </label>
-
-                            {{ form.part_description.errors }}
-                            {{ form.part_description }}
-
-                            <span class="help-text">
-                                Add any details that may help the shop identify the correct part.
-                            </span>
-                        </div>
-
-                        <div class="form-group full-width">
-                            <label for="{{ form.part_image.id_for_label }}">
-                                Upload a Photo
-                            </label>
-
-                            {{ form.part_image.errors }}
-                            {{ form.part_image }}
-
-                            <span class="help-text">
-                                Optional, but a photo can help shops identify the part faster.
-                            </span>
-                        </div>
+                        {{ form.vehicle_make.errors }}
+                        {{ form.vehicle_make }}
 
                     </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.vehicle_model.id_for_label }}">
+                            Vehicle Model
+                        </label>
+
+                        {{ form.vehicle_model.errors }}
+                        {{ form.vehicle_model }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.vehicle_year.id_for_label }}">
+                            Vehicle Year
+                        </label>
+
+                        {{ form.vehicle_year.errors }}
+                        {{ form.vehicle_year }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.engine_details.id_for_label }}">
+                            Engine Details
+                        </label>
+
+                        {{ form.engine_details.errors }}
+                        {{ form.engine_details }}
+
+                        <span class="help-text">
+                            Example: 1.6 petrol, 2.0 TDI or 320d diesel.
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.vin_number.id_for_label }}">
+                            VIN Number
+                        </label>
+
+                        {{ form.vin_number.errors }}
+                        {{ form.vin_number }}
+
+                        <span class="help-text">
+                            Optional. A VIN is usually a 17-character vehicle identification number.
+                        </span>
+
+                    </div>
+
                 </div>
+
+            </div>
+
+
+            <!-- PART DETAILS -->
+
+            <div class="form-section">
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        🔧
+                    </div>
+
+                    <div>
+                        <h2>Part Details</h2>
+                        <p>Describe the spare part you are looking for.</p>
+                    </div>
+
+                </div>
+
+
+                <div class="form-grid">
+
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.part_name.id_for_label }}">
+                            Part Needed
+                        </label>
+
+                        {{ form.part_name.errors }}
+                        {{ form.part_name }}
+
+                        <span class="help-text">
+                            Example: Front brake pads, alternator, clutch kit or headlight.
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.part_description.id_for_label }}">
+                            Description
+                        </label>
+
+                        {{ form.part_description.errors }}
+                        {{ form.part_description }}
+
+                        <span class="help-text">
+                            Add any details that may help the shop identify the correct part.
+                        </span>
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.part_image.id_for_label }}">
+                            Upload a Photo
+                        </label>
+
+                        {{ form.part_image.errors }}
+                        {{ form.part_image }}
+
+                        <span class="help-text">
+                            Optional, but a photo can help shops identify the part faster.
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <div class="submit-area">
 
                 <button class="submit-btn" type="submit">
                     Request Quotes
                 </button>
 
-            </form>
+                <p class="submit-note">
+                    Your request will be shared with participating spare-parts shops.
+                </p>
 
-        </div>
+            </div>
+
+        </form>
 
     </div>
+
+</div>
+```
 
 </body>
 </html>

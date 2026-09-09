@@ -1,178 +1,681 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Register Spare Shop | Spare Quote</title>
+```
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>Register Spare Shop | SpareQuote</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #1f2937;
-        }
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+
+        background: #f3f6f9;
+        color: #1f2937;
+
+        line-height: 1.6;
+
+        min-height: 100vh;
+    }
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .page-wrapper {
+        min-height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 40px 20px;
+    }
+
+    .register-wrapper {
+        width: 100%;
+        max-width: 720px;
+    }
+
+    /* =========================
+       BRAND
+    ========================= */
+
+    .brand-area {
+        text-align: center;
+        margin-bottom: 22px;
+    }
+
+    .brand-badge {
+        display: inline-block;
+
+        background: #e8f1ff;
+        color: #1d4ed8;
+
+        padding: 7px 14px;
+
+        border-radius: 999px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        margin-bottom: 10px;
+    }
+
+    .brand-area p {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    /* =========================
+       CARD
+    ========================= */
+
+    .register-card {
+        width: 100%;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+
+        padding: 38px;
+
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    .register-header {
+        margin-bottom: 28px;
+    }
+
+    .register-icon {
+        width: 50px;
+        height: 50px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #f1f5f9;
+
+        border-radius: 13px;
+
+        font-size: 23px;
+
+        margin-bottom: 16px;
+    }
+
+    .register-card h1 {
+        font-size: 31px;
+        line-height: 1.2;
+
+        color: #111827;
+
+        margin-bottom: 9px;
+    }
+
+    .intro {
+        color: #6b7280;
+
+        font-size: 14px;
+
+        max-width: 590px;
+    }
+
+    /* =========================
+       SECTION
+    ========================= */
+
+    .form-section {
+        margin-bottom: 30px;
+    }
+
+    .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        margin-bottom: 18px;
+
+        padding-bottom: 10px;
+
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .section-icon {
+        width: 34px;
+        height: 34px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #f8fafc;
+
+        border-radius: 9px;
+
+        font-size: 16px;
+    }
+
+    .section-heading h2 {
+        font-size: 17px;
+        color: #111827;
+    }
+
+    /* =========================
+       FORM GRID
+    ========================= */
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-grid .form-group {
+        margin-bottom: 0;
+    }
+
+    .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #374151;
+
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    /* =========================
+       DJANGO FORM FIELDS
+    ========================= */
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+
+        padding: 13px 14px;
+
+        border: 1px solid #d1d5db;
+        border-radius: 9px;
+
+        font-size: 15px;
+        font-family: Arial, Helvetica, sans-serif;
+
+        color: #111827;
+        background: #ffffff;
+
+        outline: none;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .form-group input:hover,
+    .form-group textarea:hover,
+    .form-group select:hover {
+        border-color: #9ca3af;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #2563eb;
+
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+    }
+
+    .form-group textarea {
+        min-height: 105px;
+        resize: vertical;
+    }
+
+    /* =========================
+       ERROR LIST
+    ========================= */
+
+    .errorlist {
+        margin: 7px 0 0;
+
+        padding: 8px 10px;
+
+        list-style: none;
+
+        background: #fef2f2;
+
+        border: 1px solid #fecaca;
+
+        border-radius: 7px;
+
+        color: #b91c1c;
+
+        font-size: 13px;
+    }
+
+    /* =========================
+       INFO BOX
+    ========================= */
+
+    .info-box {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+
+        margin-bottom: 24px;
+
+        padding: 14px 15px;
+
+        background: #eff6ff;
+
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+
+        color: #1e40af;
+
+        font-size: 13px;
+    }
+
+    /* =========================
+       BUTTON
+    ========================= */
+
+    .register-btn {
+        width: 100%;
+
+        border: none;
+        border-radius: 10px;
+
+        padding: 15px 20px;
+
+        background: #111827;
+        color: #ffffff;
+
+        font-size: 15px;
+        font-weight: 700;
+
+        cursor: pointer;
+
+        margin-top: 3px;
+
+        transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .register-btn:hover {
+        background: #000000;
+
+        transform: translateY(-1px);
+
+        box-shadow: 0 8px 18px rgba(17, 24, 39, 0.16);
+    }
+
+    /* =========================
+       LOGIN / BACK
+    ========================= */
+
+    .bottom-links {
+        margin-top: 24px;
+
+        padding-top: 22px;
+
+        border-top: 1px solid #e5e7eb;
+
+        text-align: center;
+    }
+
+    .login-text {
+        color: #6b7280;
+
+        font-size: 13px;
+
+        margin-bottom: 12px;
+    }
+
+    .login-text a {
+        color: #111827;
+
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+    .login-text a:hover {
+        text-decoration: underline;
+    }
+
+    .back-link {
+        display: inline-block;
+
+        color: #4b5563;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: #111827;
+        text-decoration: underline;
+    }
+
+    /* =========================
+       FOOT NOTE
+    ========================= */
+
+    .foot-note {
+        margin-top: 18px;
+
+        text-align: center;
+
+        color: #9ca3af;
+
+        font-size: 11px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 650px) {
 
         .page-wrapper {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            align-items: flex-start;
+            padding: 24px 15px;
         }
 
         .register-card {
-            width: 100%;
-            max-width: 620px;
-            background: #ffffff;
+            padding: 28px 20px;
             border-radius: 16px;
-            padding: 36px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
         .register-card h1 {
-            margin-top: 0;
-            margin-bottom: 10px;
-            font-size: 30px;
+            font-size: 27px;
         }
 
-        .intro {
-            margin-bottom: 28px;
-            color: #6b7280;
-            line-height: 1.6;
+        .form-grid {
+            grid-template-columns: 1fr;
         }
 
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: 700;
+        .form-group.full-width {
+            grid-column: auto;
         }
 
         .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 13px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            border-color: #111827;
-        }
-
-        .form-group textarea {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .errorlist {
-            margin: 6px 0 0;
-            padding: 0;
-            list-style: none;
-            color: #b91c1c;
-            font-size: 14px;
-        }
-
-        .register-btn {
-            width: 100%;
-            border: none;
-            border-radius: 8px;
-            padding: 14px 20px;
-            background: #111827;
-            color: #ffffff;
+        .form-group textarea,
+        .form-group select {
             font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 8px;
         }
 
-        .register-btn:hover {
-            background: #000000;
-        }
+    }
 
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-            color: #374151;
-            text-decoration: none;
-        }
+</style>
+```
 
-        .back-link:hover {
-            text-decoration: underline;
-        }
-    </style>
 </head>
 
 <body>
 
 <div class="page-wrapper">
 
-    <div class="register-card">
+```
+<div class="register-wrapper">
 
-        <h1>Create Shop Account</h1>
 
-        <p class="intro">
-            Register your spare parts shop to receive customer part requests
-            and send quotations directly through Spare Quote.
+    <!-- =========================
+         BRAND
+    ========================== -->
+
+    <div class="brand-area">
+
+        <span class="brand-badge">
+            SpareQuote
+        </span>
+
+        <p>
+            Spare-parts quotation platform
         </p>
 
+    </div>
+
+
+
+    <!-- =========================
+         REGISTRATION CARD
+    ========================== -->
+
+    <div class="register-card">
+
+
+        <div class="register-header">
+
+            <div class="register-icon">
+                🏪
+            </div>
+
+
+            <h1>
+                Create Shop Account
+            </h1>
+
+
+            <p class="intro">
+                Register your spare-parts business to receive customer
+                requests and send quotations directly through SpareQuote.
+            </p>
+
+        </div>
+
+
+
+        <div class="info-box">
+
+            <span>
+                💡
+            </span>
+
+            <span>
+                Once registered, your shop can access the dashboard,
+                review active part requests and submit quotations to customers.
+            </span>
+
+        </div>
+
+
+
         <form method="POST">
+
             {% csrf_token %}
 
-            <div class="form-group">
-                <label>Username</label>
-                {{ form.username }}
-                {{ form.username.errors }}
+
+
+            <!-- =========================
+                 ACCOUNT DETAILS
+            ========================== -->
+
+            <div class="form-section">
+
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        👤
+                    </div>
+
+                    <h2>
+                        Account Details
+                    </h2>
+
+                </div>
+
+
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.username.id_for_label }}">
+                            Username
+                        </label>
+
+                        {{ form.username }}
+
+                        {{ form.username.errors }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.password.id_for_label }}">
+                            Password
+                        </label>
+
+                        {{ form.password }}
+
+                        {{ form.password.errors }}
+
+                    </div>
+
+
+                </div>
+
+
             </div>
 
-            <div class="form-group">
-                <label>Password</label>
-                {{ form.password }}
-                {{ form.password.errors }}
+
+
+            <!-- =========================
+                 SHOP DETAILS
+            ========================== -->
+
+            <div class="form-section">
+
+
+                <div class="section-heading">
+
+                    <div class="section-icon">
+                        🏪
+                    </div>
+
+                    <h2>
+                        Shop Details
+                    </h2>
+
+                </div>
+
+
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.shop_name.id_for_label }}">
+                            Shop Name
+                        </label>
+
+                        {{ form.shop_name }}
+
+                        {{ form.shop_name.errors }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.phone_number.id_for_label }}">
+                            Phone Number
+                        </label>
+
+                        {{ form.phone_number }}
+
+                        {{ form.phone_number.errors }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.email.id_for_label }}">
+                            Email Address
+                        </label>
+
+                        {{ form.email }}
+
+                        {{ form.email.errors }}
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="{{ form.location.id_for_label }}">
+                            Location
+                        </label>
+
+                        {{ form.location }}
+
+                        {{ form.location.errors }}
+
+                    </div>
+
+
+                    <div class="form-group full-width">
+
+                        <label for="{{ form.address.id_for_label }}">
+                            Physical Address
+                        </label>
+
+                        {{ form.address }}
+
+                        {{ form.address.errors }}
+
+                    </div>
+
+
+                </div>
+
+
             </div>
 
-            <div class="form-group">
-                <label>Shop Name</label>
-                {{ form.shop_name }}
-                {{ form.shop_name.errors }}
-            </div>
 
-            <div class="form-group">
-                <label>Phone Number</label>
-                {{ form.phone_number }}
-                {{ form.phone_number.errors }}
-            </div>
 
-            <div class="form-group">
-                <label>Email Address</label>
-                {{ form.email }}
-                {{ form.email.errors }}
-            </div>
-
-            <div class="form-group">
-                <label>Location</label>
-                {{ form.location }}
-                {{ form.location.errors }}
-            </div>
-
-            <div class="form-group">
-                <label>Physical Address</label>
-                {{ form.address }}
-                {{ form.address.errors }}
-            </div>
+            <!-- =========================
+                 SUBMIT
+            ========================== -->
 
             <button
                 type="submit"
@@ -181,18 +684,53 @@
                 Create Shop Account
             </button>
 
+
         </form>
 
-        <a
-            href="{% url 'request_part' %}"
-            class="back-link"
-        >
-            ← Back to Spare Quote
-        </a>
+
+
+        <!-- =========================
+             LINKS
+        ========================== -->
+
+        <div class="bottom-links">
+
+
+            <p class="login-text">
+
+                Already have a shop account?
+
+                <a href="{% url 'shop_login' %}">
+                    Login here
+                </a>
+
+            </p>
+
+
+            <a
+                href="{% url 'request_part' %}"
+                class="back-link"
+            >
+                ← Back to Customer Request
+            </a>
+
+
+        </div>
+
+
+        <p class="foot-note">
+            Register only if you represent a spare-parts business.
+        </p>
+
 
     </div>
+
+
+</div>
+```
 
 </div>
 
 </body>
+
 </html>

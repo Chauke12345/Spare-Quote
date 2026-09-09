@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Track My Request | SpareQuote</title>
+
+</head>
+
+<body>
+
+    <h1>Track My Request</h1>
+
+    <p>
+        Enter your request number and the phone number
+        you used when submitting your spare-part request.
+    </p>
+
+
+    {% if error_message %}
+
+        <p>
+            {{ error_message }}
+        </p>
+
+    {% endif %}
+
+
+    {% if part_request.status == 'expired' %}
+
+    <form
+        method="POST"
+        action="{% url 'reopen_request' public_id=part_request.public_id %}"
+    >
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="btn reopen-btn"
+        >
+            ↻ Reopen Request for 24 Hours
+        </button>
+
+    </form>
+
+{% endif %}
+
+
+    <p>
+        <a href="{% url 'request_part' %}">
+            ← Back to SpareQuote
+        </a>
+    </p>
+
+</body>
+
+</html>

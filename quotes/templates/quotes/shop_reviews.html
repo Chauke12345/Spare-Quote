@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Customer Reviews | SpareQuote</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6f9;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .page-wrapper {
+            width: 94%;
+            max-width: 950px;
+            margin: 40px auto 70px;
+        }
+
+        /* =========================
+           HEADER
+        ========================= */
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .shop-logo {
+            width: 58px;
+            height: 58px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: #111827;
+            color: #ffffff;
+            font-size: 25px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .brand h1 {
+            font-size: 26px;
+            line-height: 1.2;
+            color: #111827;
+        }
+
+        .brand p {
+            margin-top: 3px;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .powered-by {
+            padding: 7px 11px;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4338ca;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* =========================
+           SUMMARY
+        ========================= */
+
+        .summary-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 26px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+        }
+
+        .summary-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+
+        .rating-score {
+            font-size: 34px;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.2;
+        }
+
+        .rating-count {
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        /* =========================
+           SECTION TITLE
+        ========================= */
+
+        .section-title {
+            margin-bottom: 15px;
+        }
+
+        .section-title h2 {
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .section-title p {
+            margin-top: 3px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* =========================
+           REVIEW CARD
+        ========================= */
+
+        .review-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+        }
+
+        .review-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            padding-bottom: 15px;
+            margin-bottom: 16px;
+            border-bottom: 1px solid #eef0f2;
+        }
+
+        .review-stars {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .review-date {
+            font-size: 12px;
+            color: #94a3b8;
+            white-space: nowrap;
+        }
+
+        .review-comment {
+            margin-bottom: 18px;
+            font-size: 15px;
+            color: #374151;
+            font-style: italic;
+        }
+
+        .review-details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .review-detail {
+            background: #f8fafc;
+            border: 1px solid #eef2f7;
+            border-radius: 10px;
+            padding: 13px 14px;
+        }
+
+        .review-detail strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: 10px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* =========================
+           EMPTY STATE
+        ========================= */
+
+        .empty-state {
+            background: #ffffff;
+            border: 1px dashed #cbd5e1;
+            border-radius: 15px;
+            padding: 42px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .empty-state strong {
+            display: block;
+            color: #374151;
+            margin-bottom: 4px;
+        }
+
+        /* =========================
+           BACK BUTTON
+        ========================= */
+
+        .back-actions {
+            margin-top: 24px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 9px;
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .back-btn:hover {
+            background: #f3f4f6;
+        }
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 650px) {
+
+            .page-wrapper {
+                margin: 24px auto 45px;
+            }
+
+            .page-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .brand h1 {
+                font-size: 22px;
+            }
+
+            .summary-card,
+            .review-card {
+                padding: 20px;
+            }
+
+            .review-top {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .review-details {
+                grid-template-columns: 1fr;
+            }
+
+            .back-btn {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="page-wrapper">
+
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+        <div class="brand">
+
+            <div class="shop-logo">
+                {{ shop.shop_name|slice:":1" }}
+            </div>
+
+            <div>
+
+                <h1>
+                    {{ shop.shop_name }}
+                </h1>
+
+                <p>
+                    Customer Reviews
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="powered-by">
+            Powered by SpareQuote
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         RATING SUMMARY
+    ========================== -->
+
+    <div class="summary-card">
+
+        <div class="summary-label">
+            Overall Customer Rating
+        </div>
+
+        {% if review_count > 0 %}
+
+            <div class="rating-score">
+                ⭐ {{ average_rating }} / 5
+            </div>
+
+            <div class="rating-count">
+                Based on
+                {{ review_count }}
+                {% if review_count == 1 %}
+                    customer review
+                {% else %}
+                    customer reviews
+                {% endif %}
+            </div>
+
+        {% else %}
+
+            <div class="rating-score">
+                No rating yet
+            </div>
+
+            <div class="rating-count">
+                Customer ratings will appear here after completed orders.
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         REVIEWS
+    ========================== -->
+
+    <div class="section-title">
+
+        <h2>
+            Customer Reviews
+        </h2>
+
+        <p>
+            Feedback received from completed spare-part orders.
+        </p>
+
+    </div>
+
+
+    {% if reviews %}
+
+        {% for review in reviews %}
+
+            <div class="review-card">
+
+                <div class="review-top">
+
+                    <div class="review-stars">
+                        ⭐ {{ review.rating }} / 5
+                    </div>
+
+                    <div class="review-date">
+                        {{ review.created_at|date:"d M Y" }}
+                    </div>
+
+                </div>
+
+
+                {% if review.comment %}
+
+                    <div class="review-comment">
+                        “{{ review.comment }}”
+                    </div>
+
+                {% endif %}
+
+
+                <div class="review-details">
+
+                    <div class="review-detail">
+
+                        <strong>
+                            Vehicle
+                        </strong>
+
+                        {{ review.part_request.vehicle_make }}
+                        {{ review.part_request.vehicle_model }}
+
+                    </div>
+
+
+                    <div class="review-detail">
+
+                        <strong>
+                            Part
+                        </strong>
+
+                        {{ review.part_request.part_name }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+
+    {% else %}
+
+        <div class="empty-state">
+
+            <strong>
+                No customer reviews yet
+            </strong>
+
+            Reviews will appear here after customers rate completed orders.
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         BACK
+    ========================== -->
+
+    <div class="back-actions">
+
+        <a
+            href="{% url 'shop_dashboard' %}"
+            class="back-btn"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+</div>
+
+</body>
+
+</html>

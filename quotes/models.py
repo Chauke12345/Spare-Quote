@@ -92,13 +92,31 @@ class PartRequest(models.Model):
         auto_now_add=True
     )
 
+    # WHATSAPP NUMBER
+    @property
+    def whatsapp_number(self):
+        number = (
+            self.phone_number
+            .replace(' ', '')
+            .replace('-', '')
+            .replace('(', '')
+            .replace(')', '')
+            .replace('+', '')
+        )
+
+        # Convert local SA number:
+        # 0712345678 -> 27712345678
+        if number.startswith('0'):
+            number = '27' + number[1:]
+
+        return number
+
     def __str__(self):
         return (
             f"Request #{self.id} - "
             f"{self.vehicle_make} {self.vehicle_model} - "
             f"{self.part_name}"
         )
-
 class Quote(models.Model):
 
     part_request = models.ForeignKey(
@@ -182,3 +200,33 @@ class Quote(models.Model):
 
     def __str__(self):
         return f"{self.shop_name} - R{self.price}"
+
+class Review(models.Model):
+
+    part_request = models.OneToOneField(
+        PartRequest,
+        on_delete=models.CASCADE,
+        related_name='review'
+    )
+
+    shop = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='reviews'
+    )
+
+    rating = models.PositiveSmallIntegerField()
+
+    comment = models.TextField(
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        return (
+            f"{self.shop.shop_name} - "
+            f"{self.rating}/5"
+        )

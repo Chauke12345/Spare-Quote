@@ -14,9 +14,19 @@ from django.utils import timezone
 
 from django.db import transaction
 
-from .forms import PartRequestForm, QuoteForm, ShopRegistrationForm
 
-from .models import PartRequest, Quote, Shop
+from .models import PartRequest, Quote, Shop, Review
+
+from django.db.models import Q, Avg
+from .forms import (
+    PartRequestForm,
+    QuoteForm,
+    ShopRegistrationForm,
+    ReviewForm,
+    TrackRequestForm,
+)
+
+
 
 
 # =========================================================
@@ -33,10 +43,9 @@ def request_part(request):
             part_request = form.save()
 
             return redirect(
-                'request_detail',
+                'request_success',
                 public_id=part_request.public_id
             )
-
     else:
         form = PartRequestForm()
 
@@ -51,18 +60,21 @@ def request_part(request):
 # REQUEST SUCCESS
 # =========================================================
 
-def request_success(request):
+def request_success(request, public_id):
     return render(
         request,
-        'quotes/request_success.html'
+        'quotes/request_success.html',
+        {
+            'public_id': public_id
+        }
     )
-
 
 # =========================================================
 # CUSTOMER - REQUEST DETAILS
 # =========================================================
 
 def request_detail(request, public_id):
+
     part_request = get_object_or_404(
         PartRequest,
         public_id=public_id
@@ -78,19 +90,148 @@ def request_detail(request, public_id):
         part_request.status = 'expired'
         part_request.save()
 
+
+    # =========================================================
+    # SHOP RATINGS FOR CUSTOMER QUOTES
+    # =========================================================
+
+    quotes = part_request.quotes.select_related(
+        'shop'
+    ).all()
+
+    for quote in quotes:
+
+        quote.shop_average_rating = None
+        quote.shop_review_count = 0
+
+        if quote.shop:
+
+            shop_reviews = Review.objects.filter(
+                shop=quote.shop
+            )
+
+            quote.shop_review_count = shop_reviews.count()
+
+            rating_data = shop_reviews.aggregate(
+                average_rating=Avg('rating')
+            )
+
+            if rating_data['average_rating'] is not None:
+                quote.shop_average_rating = round(
+                    rating_data['average_rating'],
+                    1
+                )
+
+
+    # =========================================================
+    # CUSTOMER REVIEW
+    # =========================================================
+
+    existing_review = Review.objects.filter(
+        part_request=part_request
+    ).first()
+
+    review_form = None
+
+    if (
+        part_request.status == 'completed'
+        and not existing_review
+    ):
+        review_form = ReviewForm()
+
+
     return render(
         request,
         'quotes/request_detail.html',
         {
             'part_request': part_request,
-            'quotes': part_request.quotes.all(),
+            'quotes': quotes,
+            'existing_review': existing_review,
+            'review_form': review_form,
         }
     )
 
+# =========================================================
+# CUSTOMER - REQUEST DETAILS
+# =========================================================
 
-# =========================================================
-# CUSTOMER - ACCEPT QUOTE
-# =========================================================
+def request_detail(request, public_id):
+
+    part_request = get_object_or_404(
+        PartRequest,
+        public_id=public_id
+    )
+
+    # Check whether the current 24-hour round has expired
+    expiry_time = timezone.now() - timedelta(hours=24)
+
+    if (
+        part_request.status in ['pending', 'quoted']
+        and part_request.created_at < expiry_time
+    ):
+        part_request.status = 'expired'
+        part_request.save()
+
+
+    # =========================================================
+    # SHOP RATINGS FOR CUSTOMER QUOTES
+    # =========================================================
+
+    quotes = part_request.quotes.select_related(
+        'shop'
+    ).all()
+
+    for quote in quotes:
+
+        quote.shop_average_rating = None
+        quote.shop_review_count = 0
+
+        if quote.shop:
+
+            shop_reviews = Review.objects.filter(
+                shop=quote.shop
+            )
+
+            quote.shop_review_count = shop_reviews.count()
+
+            rating_data = shop_reviews.aggregate(
+                average_rating=Avg('rating')
+            )
+
+            if rating_data['average_rating'] is not None:
+                quote.shop_average_rating = round(
+                    rating_data['average_rating'],
+                    1
+                )
+
+
+    # =========================================================
+    # CUSTOMER REVIEW
+    # =========================================================
+
+    existing_review = Review.objects.filter(
+        part_request=part_request
+    ).first()
+
+    review_form = None
+
+    if (
+        part_request.status == 'completed'
+        and not existing_review
+    ):
+        review_form = ReviewForm()
+
+
+    return render(
+        request,
+        'quotes/request_detail.html',
+        {
+            'part_request': part_request,
+            'quotes': quotes,
+            'existing_review': existing_review,
+            'review_form': review_form,
+        }
+    )
 # =========================================================
 # CUSTOMER - ACCEPT QUOTE
 # =========================================================
@@ -163,18 +304,74 @@ def accept_quote(request, public_id, quote_id):
         'request_detail',
         public_id=part_request.public_id
     )
+
+@require_POST
+@login_required(login_url='shop_login')
+def mark_completed(request, request_id):
+
+    shop = get_object_or_404(
+        Shop,
+        user=request.user
+    )
+
+    part_request = get_object_or_404(
+        PartRequest,
+        id=request_id,
+        status='accepted'
+    )
+
+    accepted_quote = Quote.objects.filter(
+        part_request=part_request,
+        shop=shop,
+        is_accepted=True
+    ).first()
+
+    if not accepted_quote:
+        return redirect('shop_dashboard')
+
+    part_request.status = 'completed'
+    part_request.save()
+
+    return redirect('shop_dashboard')
 # =========================================================
 # SHOP DASHBOARD
 # =========================================================
 
 @login_required(login_url='shop_login')
 def shop_dashboard(request):
+
     shop = get_object_or_404(
         Shop,
         user=request.user
     )
+    
 
-    # Expire requests whose current round is older than 24 hours
+    # =========================================================
+    # SHOP REVIEW STATS
+    # =========================================================
+
+    review_stats = Review.objects.filter(
+        shop=shop
+    ).aggregate(
+        average_rating=Avg('rating')
+    )
+
+    average_rating = review_stats['average_rating']
+
+    review_count = Review.objects.filter(
+        shop=shop
+    ).count()
+
+    if average_rating is not None:
+        average_rating = round(
+            average_rating,
+            1
+        )
+
+    # =========================================================
+    # EXPIRE OLD ACTIVE REQUESTS
+    # =========================================================
+
     expiry_time = timezone.now() - timedelta(hours=24)
 
     PartRequest.objects.filter(
@@ -184,19 +381,21 @@ def shop_dashboard(request):
         status='expired'
     )
 
-    # Active requests
+    # =========================================================
+    # OPEN REQUESTS
+    # =========================================================
+
     open_requests = PartRequest.objects.filter(
         status__in=['pending', 'quoted']
     ).order_by(
         '-created_at'
     )
 
-    # -----------------------------------------------------
+    # =========================================================
     # QUOTES SUBMITTED IN CURRENT ROUND
-    # -----------------------------------------------------
+    # =========================================================
 
     current_round_quote_ids = []
-
     update_quote_request_ids = []
 
     for part_request in open_requests:
@@ -204,11 +403,13 @@ def shop_dashboard(request):
         existing_quote = Quote.objects.filter(
             part_request=part_request,
             shop=shop
+        ).order_by(
+            '-id'
         ).first()
 
         if existing_quote:
 
-            # Shop has already submitted/updated in this round
+            # Shop already quoted in current round
             if (
                 existing_quote.quote_round
                 == part_request.request_round
@@ -217,7 +418,7 @@ def shop_dashboard(request):
                     part_request.id
                 )
 
-            # Shop quoted in an older round
+            # Shop quoted in previous round
             elif (
                 existing_quote.quote_round
                 < part_request.request_round
@@ -226,36 +427,93 @@ def shop_dashboard(request):
                     part_request.id
                 )
 
-    # Keep this name for the current dashboard template
     quoted_request_ids = current_round_quote_ids
 
-    # -----------------------------------------------------
+    # =========================================================
     # NOTIFICATION COUNT
-    # -----------------------------------------------------
+    # =========================================================
 
-    # Anything not quoted in the current round
-    # needs supplier attention.
     new_request_count = open_requests.exclude(
         id__in=current_round_quote_ids
     ).count()
 
-    # =====================================================
+    # =========================================================
+    # ACCEPTED / WON REQUESTS
+    # =========================================================
+
+    accepted_quotes = Quote.objects.filter(
+        shop=shop,
+        is_accepted=True,
+        part_request__status='accepted'
+    ).select_related(
+        'part_request'
+    ).order_by(
+        '-id'
+    )
+
+    accepted_request_ids = accepted_quotes.values_list(
+        'part_request_id',
+        flat=True
+    )
+
+    accepted_requests = list(
+        PartRequest.objects.filter(
+            id__in=accepted_request_ids,
+            status='accepted'
+        ).order_by(
+            '-created_at'
+        )
+    )
+
+    # Attach the accepted quote to each request
+    accepted_quote_map = {
+        quote.part_request_id: quote
+        for quote in accepted_quotes
+    }
+
+    for part_request in accepted_requests:
+
+        part_request.accepted_shop_quote = (
+            accepted_quote_map.get(
+                part_request.id
+            )
+        )
+
+        
+
+    # =========================================================
     # REQUEST HISTORY FILTER
-    # =====================================================
+    # =========================================================
 
     history_filter = request.GET.get(
         'history',
         'today'
     )
 
+    # Expired requests:
+    # show them to shops that submitted a quote.
+    #
+    # Completed requests:
+    # only show them to the shop whose quote was accepted.
     request_history = PartRequest.objects.filter(
-        status__in=[
-            'accepted',
-            'expired',
-            'completed'
-        ],
-        quotes__shop=shop
+        Q(
+            status='expired',
+            quotes__shop=shop
+        )
+        |
+        Q(
+            status='completed',
+            quotes__shop=shop,
+            quotes__is_accepted=True
+        )
     ).distinct()
+
+
+   
+
+    # =========================================================
+    # HISTORY DATE FILTERS
+    # =========================================================
 
     if history_filter == 'today':
 
@@ -282,9 +540,11 @@ def shop_dashboard(request):
         )
 
     elif history_filter == 'all':
+
         pass
 
     else:
+
         history_filter = 'today'
 
         request_history = request_history.filter(
@@ -295,14 +555,41 @@ def shop_dashboard(request):
         '-created_at'
     )
 
+    # =========================================================
+    # ATTACH THIS SHOP'S QUOTE TO HISTORY REQUESTS
+    # =========================================================
+
+    request_history = list(
+        request_history
+    )
+
+    for part_request in request_history:
+
+        part_request.shop_quote = Quote.objects.filter(
+            part_request=part_request,
+            shop=shop
+        ).order_by(
+            '-id'
+        ).first()
+    # =========================================================
+    # RENDER DASHBOARD
+    # =========================================================
+
     return render(
         request,
         'quotes/shop_dashboard.html',
         {
-            'open_requests': open_requests,
-            'request_history': request_history,
+            'open_requests':
+                open_requests,
 
-            'quoted_request_ids': quoted_request_ids,
+            'accepted_requests':
+                accepted_requests,
+
+            'request_history':
+                request_history,
+
+            'quoted_request_ids':
+                quoted_request_ids,
 
             'update_quote_request_ids':
                 update_quote_request_ids,
@@ -312,10 +599,60 @@ def shop_dashboard(request):
 
             'history_filter':
                 history_filter,
+
+            'average_rating':
+                average_rating,
+
+            'review_count':
+                review_count,
         }
     )
 
+    
 
+
+# =========================================================
+# SHOP REVIEWS
+# =========================================================
+
+@login_required(login_url='shop_login')
+def shop_reviews(request):
+
+    shop = get_object_or_404(
+        Shop,
+        user=request.user
+    )
+
+    reviews = Review.objects.filter(
+        shop=shop
+    ).select_related(
+        'part_request'
+    ).order_by(
+        '-created_at'
+    )
+
+    review_stats = reviews.aggregate(
+        average_rating=Avg('rating')
+    )
+
+    average_rating = review_stats['average_rating']
+
+    if average_rating is not None:
+        average_rating = round(
+            average_rating,
+            1
+        )
+
+    return render(
+        request,
+        'quotes/shop_reviews.html',
+        {
+            'shop': shop,
+            'reviews': reviews,
+            'average_rating': average_rating,
+            'review_count': reviews.count(),
+        }
+    )
 # =========================================================
 # SHOP - SUBMIT / UPDATE QUOTE
 # =========================================================
@@ -626,4 +963,95 @@ def reopen_request(request, public_id):
     return redirect(
         'request_detail',
         public_id=part_request.public_id
+    )
+
+@require_POST
+def submit_review(request, public_id):
+
+    part_request = get_object_or_404(
+        PartRequest,
+        public_id=public_id,
+        status='completed'
+    )
+
+    accepted_quote = Quote.objects.filter(
+        part_request=part_request,
+        is_accepted=True
+    ).select_related('shop').first()
+
+    if not accepted_quote or not accepted_quote.shop:
+        return redirect(
+            'request_detail',
+            public_id=part_request.public_id
+        )
+
+    if Review.objects.filter(
+        part_request=part_request
+    ).exists():
+        return redirect(
+            'request_detail',
+            public_id=part_request.public_id
+        )
+
+    form = ReviewForm(request.POST)
+
+    if form.is_valid():
+
+        review = form.save(commit=False)
+
+        review.part_request = part_request
+        review.shop = accepted_quote.shop
+
+        review.save()
+
+    return redirect(
+        'request_detail',
+        public_id=part_request.public_id
+    )
+
+# =========================================================
+# CUSTOMER - TRACK REQUEST
+# =========================================================
+
+def track_request(request):
+
+    error_message = None
+
+    if request.method == 'POST':
+
+        form = TrackRequestForm(request.POST)
+
+        if form.is_valid():
+
+            request_id = form.cleaned_data['request_id']
+            phone_number = form.cleaned_data['phone_number']
+
+            part_request = PartRequest.objects.filter(
+                id=request_id,
+                phone_number=phone_number
+            ).first()
+
+            if part_request:
+
+                return redirect(
+                    'request_detail',
+                    public_id=part_request.public_id
+                )
+
+            error_message = (
+                'We could not find a request matching '
+                'that request number and phone number.'
+            )
+
+    else:
+
+        form = TrackRequestForm()
+
+    return render(
+        request,
+        'quotes/track_request.html',
+        {
+            'form': form,
+            'error_message': error_message,
+        }
     )

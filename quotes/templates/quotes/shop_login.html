@@ -1,169 +1,524 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Shop Login | Spare Quote</title>
+```
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <style>
-        * {
-            box-sizing: border-box;
-        }
+<title>Shop Login | SpareQuote</title>
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #1f2937;
-        }
+<style>
+
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, Helvetica, sans-serif;
+
+        background: #f3f6f9;
+        color: #1f2937;
+
+        line-height: 1.6;
+
+        min-height: 100vh;
+    }
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .page-wrapper {
+        min-height: 100vh;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        padding: 35px 20px;
+    }
+
+    .login-wrapper {
+        width: 100%;
+        max-width: 470px;
+    }
+
+    /* =========================
+       BRAND
+    ========================= */
+
+    .brand-area {
+        text-align: center;
+        margin-bottom: 22px;
+    }
+
+    .brand-badge {
+        display: inline-block;
+
+        background: #e8f1ff;
+        color: #1d4ed8;
+
+        padding: 7px 14px;
+
+        border-radius: 999px;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        margin-bottom: 12px;
+    }
+
+    .brand-area p {
+        color: #6b7280;
+        font-size: 13px;
+    }
+
+    /* =========================
+       LOGIN CARD
+    ========================= */
+
+    .login-card {
+        width: 100%;
+
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+        border-radius: 20px;
+
+        padding: 36px;
+
+        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+    }
+
+    .login-header {
+        margin-bottom: 28px;
+    }
+
+    .login-icon {
+        width: 48px;
+        height: 48px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        background: #f1f5f9;
+
+        border-radius: 12px;
+
+        font-size: 22px;
+
+        margin-bottom: 16px;
+    }
+
+    .login-card h1 {
+        font-size: 30px;
+        line-height: 1.2;
+
+        color: #111827;
+
+        margin-bottom: 8px;
+    }
+
+    .intro {
+        color: #6b7280;
+
+        font-size: 14px;
+
+        line-height: 1.6;
+    }
+
+    /* =========================
+       ERROR
+    ========================= */
+
+    .error-message {
+        display: flex;
+        align-items: flex-start;
+
+        gap: 9px;
+
+        background: #fef2f2;
+        color: #991b1b;
+
+        border: 1px solid #fecaca;
+
+        padding: 12px 14px;
+
+        border-radius: 9px;
+
+        margin-bottom: 20px;
+
+        font-size: 13px;
+    }
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .form-group {
+        margin-bottom: 19px;
+    }
+
+    .form-group label {
+        display: block;
+
+        margin-bottom: 7px;
+
+        color: #374151;
+
+        font-size: 14px;
+        font-weight: 700;
+    }
+
+    .form-group input {
+        width: 100%;
+
+        padding: 13px 14px;
+
+        border: 1px solid #d1d5db;
+        border-radius: 9px;
+
+        font-size: 15px;
+
+        color: #111827;
+        background: #ffffff;
+
+        outline: none;
+
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .form-group input:hover {
+        border-color: #9ca3af;
+    }
+
+    .form-group input:focus {
+        border-color: #2563eb;
+
+        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+    }
+
+    /* =========================
+       LOGIN BUTTON
+    ========================= */
+
+    .login-btn {
+        width: 100%;
+
+        border: none;
+
+        border-radius: 10px;
+
+        padding: 14px 20px;
+
+        background: #111827;
+        color: #ffffff;
+
+        font-size: 15px;
+        font-weight: 700;
+
+        cursor: pointer;
+
+        margin-top: 3px;
+
+        transition:
+            background 0.2s ease,
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
+    }
+
+    .login-btn:hover {
+        background: #000000;
+
+        transform: translateY(-1px);
+
+        box-shadow: 0 8px 18px rgba(17, 24, 39, 0.16);
+    }
+
+    /* =========================
+       REGISTER
+    ========================= */
+
+    .account-divider {
+        display: flex;
+        align-items: center;
+
+        gap: 12px;
+
+        margin: 25px 0 20px;
+
+        color: #9ca3af;
+
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .account-divider::before,
+    .account-divider::after {
+        content: "";
+
+        flex: 1;
+
+        height: 1px;
+
+        background: #e5e7eb;
+    }
+
+    .register-box {
+        background: #f8fafc;
+
+        border: 1px solid #e5e7eb;
+        border-radius: 11px;
+
+        padding: 16px;
+
+        text-align: center;
+    }
+
+    .register-text {
+        color: #6b7280;
+
+        font-size: 13px;
+
+        margin-bottom: 10px;
+    }
+
+    .register-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 100%;
+
+        padding: 11px 14px;
+
+        border-radius: 9px;
+
+        background: #ffffff;
+        color: #111827;
+
+        border: 1px solid #d1d5db;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        text-decoration: none;
+
+        transition:
+            background 0.2s ease,
+            border-color 0.2s ease;
+    }
+
+    .register-link:hover {
+        background: #f3f4f6;
+        border-color: #9ca3af;
+    }
+
+    /* =========================
+       BACK LINK
+    ========================= */
+
+    .back-area {
+        text-align: center;
+        margin-top: 19px;
+    }
+
+    .back-link {
+        display: inline-block;
+
+        color: #4b5563;
+
+        font-size: 13px;
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+    .back-link:hover {
+        color: #111827;
+        text-decoration: underline;
+    }
+
+    /* =========================
+       SECURITY NOTE
+    ========================= */
+
+    .security-note {
+        margin-top: 18px;
+
+        text-align: center;
+
+        color: #9ca3af;
+
+        font-size: 11px;
+    }
+
+    /* =========================
+       MOBILE
+    ========================= */
+
+    @media (max-width: 520px) {
 
         .page-wrapper {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            align-items: flex-start;
+            padding: 24px 15px;
         }
 
         .login-card {
-            width: 100%;
-            max-width: 460px;
-            background: #ffffff;
+            padding: 28px 20px;
             border-radius: 16px;
-            padding: 36px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
         .login-card h1 {
-            margin: 0 0 10px;
-            font-size: 30px;
-        }
-
-        .intro {
-            color: #6b7280;
-            line-height: 1.6;
-            margin-bottom: 28px;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 7px;
-            font-weight: 700;
+            font-size: 27px;
         }
 
         .form-group input {
-            width: 100%;
-            padding: 13px 14px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            font-size: 15px;
-            outline: none;
-        }
-
-        .form-group input:focus {
-            border-color: #111827;
-        }
-
-        .error-message {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .login-btn {
-            width: 100%;
-            border: none;
-            border-radius: 8px;
-            padding: 14px 20px;
-            background: #111827;
-            color: #ffffff;
             font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
         }
 
-        .login-btn:hover {
-            background: #000000;
-        }
+    }
 
-        .register-text {
-            text-align: center;
-            margin-top: 22px;
-            color: #6b7280;
-        }
+</style>
+```
 
-        .register-text a,
-        .back-link {
-            color: #111827;
-            font-weight: 700;
-            text-decoration: none;
-        }
-
-        .register-text a:hover,
-        .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .back-link {
-            display: block;
-            text-align: center;
-            margin-top: 18px;
-        }
-    </style>
 </head>
 
 <body>
 
 <div class="page-wrapper">
 
-    <div class="login-card">
+```
+<div class="login-wrapper">
 
-        <h1>Shop Login</h1>
 
-        <p class="intro">
-            Sign in to your Spare Quote shop account to view
-            customer part requests and send quotations.
+    <!-- =========================
+         BRAND
+    ========================== -->
+
+    <div class="brand-area">
+
+        <span class="brand-badge">
+            SpareQuote
+        </span>
+
+        <p>
+            Spare-parts quotation platform
         </p>
 
-        {% if error_message %}
-            <div class="error-message">
-                {{ error_message }}
+    </div>
+
+
+
+    <!-- =========================
+         LOGIN CARD
+    ========================== -->
+
+    <div class="login-card">
+
+
+        <div class="login-header">
+
+            <div class="login-icon">
+                🏪
             </div>
+
+
+            <h1>
+                Shop Login
+            </h1>
+
+
+            <p class="intro">
+                Sign in to your shop account to review customer
+                spare-part requests and manage your quotations.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================
+             ERROR
+        ========================== -->
+
+        {% if error_message %}
+
+            <div class="error-message">
+
+                <span>
+                    ⚠
+                </span>
+
+                <span>
+                    {{ error_message }}
+                </span>
+
+            </div>
+
         {% endif %}
 
+
+
+        <!-- =========================
+             LOGIN FORM
+        ========================== -->
+
         <form method="POST">
+
             {% csrf_token %}
 
+
+
             <div class="form-group">
-                <label for="username">Username</label>
+
+                <label for="username">
+                    Username
+                </label>
 
                 <input
                     type="text"
                     id="username"
                     name="username"
                     placeholder="Enter your username"
+                    autocomplete="username"
                     required
                 >
+
             </div>
 
+
+
             <div class="form-group">
-                <label for="password">Password</label>
+
+                <label for="password">
+                    Password
+                </label>
 
                 <input
                     type="password"
                     id="password"
                     name="password"
                     placeholder="Enter your password"
+                    autocomplete="current-password"
                     required
                 >
+
             </div>
+
+
 
             <button
                 type="submit"
@@ -172,25 +527,68 @@
                 Login to Dashboard
             </button>
 
+
         </form>
 
-        <p class="register-text">
-            Don't have a shop account?
-            <a href="{% url 'shop_register' %}">
-                Register your shop
+
+
+        <!-- =========================
+             REGISTER SHOP
+        ========================== -->
+
+        <div class="account-divider">
+            New to SpareQuote?
+        </div>
+
+
+        <div class="register-box">
+
+            <p class="register-text">
+                Create a shop account to start receiving
+                spare-part requests from customers.
+            </p>
+
+
+            <a
+                href="{% url 'shop_register' %}"
+                class="register-link"
+            >
+                Register Your Shop
             </a>
+
+        </div>
+
+
+
+        <!-- =========================
+             BACK
+        ========================== -->
+
+        <div class="back-area">
+
+            <a
+                href="{% url 'request_part' %}"
+                class="back-link"
+            >
+                ← Back to Customer Request
+            </a>
+
+        </div>
+
+
+        <p class="security-note">
+            Shop accounts are protected by secure sign-in.
         </p>
 
-        <a
-            href="{% url 'request_part' %}"
-            class="back-link"
-        >
-            ← Back to Spare Quote
-        </a>
 
     </div>
+
+
+</div>
+```
 
 </div>
 
 </body>
+
 </html>
