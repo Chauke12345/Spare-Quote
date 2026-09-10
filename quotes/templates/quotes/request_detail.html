@@ -741,13 +741,24 @@
     <div>
 
         <h1>
-            Your Spare Part Request
-        </h1>
+    Your Spare Part Request
+</h1>
 
-        <p>
-            Review your request and compare quotations from spare-parts shops.
-        </p>
+{% if part_request.request_source == 'shop_qr' and part_request.source_shop %}
 
+    <p>
+        Your request was sent directly to
+        {{ part_request.source_shop.shop_name }}.
+        You can view their quotation here.
+    </p>
+
+{% else %}
+
+    <p>
+        Review your request and compare quotations from spare-parts shops.
+    </p>
+
+{% endif %}
     </div>
 
 
@@ -1483,18 +1494,30 @@
 
 
 
+{% if part_request.request_source == 'shop_qr' and part_request.source_shop %}
+
     <a
         class="new-request"
-        href="/"
+        href="{% url 'shop_request_part' part_request.source_shop.id %}"
     >
         + Request Another Part
     </a>
 
+{% else %}
+
+    <a
+        class="new-request"
+        href="{% url 'request_part' %}"
+    >
+        + Request Another Part
+    </a>
+
+{% endif %}
+
 
 </div>
 
-
-{% if part_request.status == 'pending' or part_request.status == 'quoted' %}
+{% if part_request.status == 'pending' or part_request.status == 'quoted' or part_request.status == 'accepted' %}
 
 <script>
     console.log("Customer auto-refresh started");

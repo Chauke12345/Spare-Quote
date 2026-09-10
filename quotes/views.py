@@ -3,49 +3,72 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 
 from django.contrib.auth.models import User
-
 from django.contrib.auth import authenticate, login, logout
-
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from datetime import timedelta
 
 from django.utils import timezone
-
 from django.db import transaction
-
-
-from .models import PartRequest, Quote, Shop, Review
-
 from django.db.models import Q, Avg
+
+from .models import PartRequest, Quote, Shop, Review, Notification, NotificationRead
+
 from .forms import (
     PartRequestForm,
     QuoteForm,
     ShopRegistrationForm,
     ReviewForm,
     TrackRequestForm,
+    AdminNotificationForm,
 )
-
 
 
 
 # =========================================================
 # CUSTOMER - REQUEST A PART
 # =========================================================
-def request_part(request):
+
+def request_part(request, shop_id=None):
+
+    source_shop = None
+    request_source = 'marketplace'
+
+    # If customer came through a shop QR code
+    if shop_id is not None:
+        source_shop = get_object_or_404(
+            Shop,
+            id=shop_id,
+            is_active=True,
+            private_qr_enabled=True
+        )
+
+        request_source = 'shop_qr'
+
     if request.method == 'POST':
+
         form = PartRequestForm(
             request.POST,
             request.FILES
         )
 
         if form.is_valid():
-            part_request = form.save()
+
+            part_request = form.save(
+                commit=False
+            )
+
+            part_request.request_source = request_source
+            part_request.source_shop = source_shop
+
+            part_request.save()
 
             return redirect(
                 'request_success',
                 public_id=part_request.public_id
             )
+
     else:
         form = PartRequestForm()
 
@@ -53,7 +76,8 @@ def request_part(request):
         request,
         'quotes/request_part.html',
         {
-            'form': form
+            'form': form,
+            'source_shop': source_shop,
         }
     )
 # =========================================================
@@ -61,95 +85,20 @@ def request_part(request):
 # =========================================================
 
 def request_success(request, public_id):
-    return render(
-        request,
-        'quotes/request_success.html',
-        {
-            'public_id': public_id
-        }
-    )
-
-# =========================================================
-# CUSTOMER - REQUEST DETAILS
-# =========================================================
-
-def request_detail(request, public_id):
 
     part_request = get_object_or_404(
         PartRequest,
         public_id=public_id
     )
 
-    # Check whether the current 24-hour round has expired
-    expiry_time = timezone.now() - timedelta(hours=24)
-
-    if (
-        part_request.status in ['pending', 'quoted']
-        and part_request.created_at < expiry_time
-    ):
-        part_request.status = 'expired'
-        part_request.save()
-
-
-    # =========================================================
-    # SHOP RATINGS FOR CUSTOMER QUOTES
-    # =========================================================
-
-    quotes = part_request.quotes.select_related(
-        'shop'
-    ).all()
-
-    for quote in quotes:
-
-        quote.shop_average_rating = None
-        quote.shop_review_count = 0
-
-        if quote.shop:
-
-            shop_reviews = Review.objects.filter(
-                shop=quote.shop
-            )
-
-            quote.shop_review_count = shop_reviews.count()
-
-            rating_data = shop_reviews.aggregate(
-                average_rating=Avg('rating')
-            )
-
-            if rating_data['average_rating'] is not None:
-                quote.shop_average_rating = round(
-                    rating_data['average_rating'],
-                    1
-                )
-
-
-    # =========================================================
-    # CUSTOMER REVIEW
-    # =========================================================
-
-    existing_review = Review.objects.filter(
-        part_request=part_request
-    ).first()
-
-    review_form = None
-
-    if (
-        part_request.status == 'completed'
-        and not existing_review
-    ):
-        review_form = ReviewForm()
-
-
     return render(
         request,
-        'quotes/request_detail.html',
+        'quotes/request_success.html',
         {
-            'part_request': part_request,
-            'quotes': quotes,
-            'existing_review': existing_review,
-            'review_form': review_form,
+            'part_request': part_request
         }
     )
+
 
 # =========================================================
 # CUSTOMER - REQUEST DETAILS
@@ -340,11 +289,73 @@ def mark_completed(request, request_id):
 @login_required(login_url='shop_login')
 def shop_dashboard(request):
 
+    # =========================================================
+    # GET LOGGED-IN SHOP
+    # =========================================================
+
     shop = get_object_or_404(
         Shop,
         user=request.user
     )
+    # =========================================================
+    # BLOCK INACTIVE SHOPS
+    # =========================================================
+
+    if not shop.is_active:
+
+        messages.error(
+            request,
+            'Your SpareQuote account is currently inactive. '
+            'Please contact the administrator.'
+        )
+
+        logout(request)
+
+        return redirect('shop_login')
+
+
+    # =========================================================
+    # SHOP NOTIFICATIONS
+    # =========================================================
+
+    visible_notifications = Notification.objects.filter(
+        Q(shop=shop) | Q(is_global=True)
+    )
+
+    notifications = list(
+        visible_notifications.order_by(
+            '-created_at'
+        )[:10]
+    )
+
+    read_notification_ids = set(
+        NotificationRead.objects.filter(
+            shop=shop
+        ).values_list(
+            'notification_id',
+            flat=True
+        )
+    )
+
+    all_read_ids = read_notification_ids
+
+    for notification in notifications:
+        notification.is_read_for_shop = (
+            notification.id in all_read_ids
+        )
+
+    unread_notification_count = (
+        visible_notifications.exclude(
+            id__in=all_read_ids
+        ).count()
+    )
     
+
+    # =========================================================
+    # EXPIRE OLD ACTIVE REQUESTS
+    # =========================================================
+
+    expiry_time = timezone.now() - timedelta(hours=24)
 
     # =========================================================
     # SHOP REVIEW STATS
@@ -380,13 +391,36 @@ def shop_dashboard(request):
     ).update(
         status='expired'
     )
-
     # =========================================================
     # OPEN REQUESTS
     # =========================================================
 
+    # Start with a filter that matches nothing.
+    # We then add only the request types this shop is allowed to see.
+    request_filter = Q(pk__in=[])
+
+    # Marketplace + Mechanic QR requests
+    if shop.marketplace_enabled:
+        request_filter |= Q(
+            request_source__in=[
+                'marketplace',
+                'mechanic_qr'
+            ]
+        )
+
+    # Private requests from this shop's own QR code
+    if shop.private_qr_enabled:
+        request_filter |= Q(
+            request_source='shop_qr',
+            source_shop=shop
+        )
+
     open_requests = PartRequest.objects.filter(
-        status__in=['pending', 'quoted']
+        request_filter,
+        status__in=[
+            'pending',
+            'quoted'
+        ]
     ).order_by(
         '-created_at'
     )
@@ -418,7 +452,7 @@ def shop_dashboard(request):
                     part_request.id
                 )
 
-            # Shop quoted in previous round
+            # Shop quoted in a previous round
             elif (
                 existing_quote.quote_round
                 < part_request.request_round
@@ -472,14 +506,11 @@ def shop_dashboard(request):
     }
 
     for part_request in accepted_requests:
-
         part_request.accepted_shop_quote = (
             accepted_quote_map.get(
                 part_request.id
             )
         )
-
-        
 
     # =========================================================
     # REQUEST HISTORY FILTER
@@ -490,11 +521,11 @@ def shop_dashboard(request):
         'today'
     )
 
-    # Expired requests:
-    # show them to shops that submitted a quote.
+    # Expired:
+    # Show requests where this shop submitted a quote.
     #
-    # Completed requests:
-    # only show them to the shop whose quote was accepted.
+    # Completed:
+    # Show only requests won by this shop.
     request_history = PartRequest.objects.filter(
         Q(
             status='expired',
@@ -507,9 +538,6 @@ def shop_dashboard(request):
             quotes__is_accepted=True
         )
     ).distinct()
-
-
-   
 
     # =========================================================
     # HISTORY DATE FILTERS
@@ -554,7 +582,6 @@ def shop_dashboard(request):
     request_history = request_history.order_by(
         '-created_at'
     )
-
     # =========================================================
     # ATTACH THIS SHOP'S QUOTE TO HISTORY REQUESTS
     # =========================================================
@@ -571,6 +598,8 @@ def shop_dashboard(request):
         ).order_by(
             '-id'
         ).first()
+
+
     # =========================================================
     # RENDER DASHBOARD
     # =========================================================
@@ -605,12 +634,196 @@ def shop_dashboard(request):
 
             'review_count':
                 review_count,
+
+            'notifications':
+                notifications,
+
+            'unread_notification_count':
+                unread_notification_count,
         }
     )
 
-    
+
+# =========================================================
+# SPAREQUOTE ADMIN DASHBOARD
+# =========================================================
+
+from django.contrib.admin.views.decorators import staff_member_required
 
 
+@staff_member_required
+def admin_dashboard(request):
+
+    total_shops = Shop.objects.count()
+
+    active_shops = Shop.objects.filter(
+        is_active=True
+    ).count()
+
+    marketplace_shops = Shop.objects.filter(
+        marketplace_enabled=True,
+        is_active=True
+    ).count()
+
+    private_qr_shops = Shop.objects.filter(
+        private_qr_enabled=True,
+        is_active=True
+    ).count()
+
+
+    total_requests = PartRequest.objects.count()
+
+    open_requests = PartRequest.objects.filter(
+        status__in=['pending', 'quoted']
+    ).count()
+
+    marketplace_requests = PartRequest.objects.filter(
+        request_source__in=[
+            'marketplace',
+            'mechanic_qr'
+        ]
+    ).count()
+
+    private_requests = PartRequest.objects.filter(
+        request_source='shop_qr'
+    ).count()
+
+
+    total_quotes = Quote.objects.count()
+
+    accepted_orders = PartRequest.objects.filter(
+        status='accepted'
+    ).count()
+
+    completed_orders = PartRequest.objects.filter(
+        status='completed'
+    ).count()
+
+    total_reviews = Review.objects.count()
+
+
+    # =========================================================
+    # RECENT REQUESTS
+    # =========================================================
+
+    recent_requests = PartRequest.objects.select_related(
+        'source_shop'
+    ).order_by(
+        '-created_at'
+    )[:10]
+
+
+    # =========================================================
+    # SHOPS MANAGEMENT
+    # =========================================================
+
+    shops = Shop.objects.select_related(
+        'user'
+    ).order_by(
+        'shop_name'
+    )
+
+
+    # =========================================================
+    # ADMIN NOTIFICATION FORM
+    # =========================================================
+
+    notification_form = AdminNotificationForm(
+        request.POST or None
+    )
+
+    if request.method == 'POST':
+
+        if notification_form.is_valid():
+
+            send_to = notification_form.cleaned_data['send_to']
+            selected_shop = notification_form.cleaned_data['shop']
+            title = notification_form.cleaned_data['title']
+            message_text = notification_form.cleaned_data['message']
+            notification_type = notification_form.cleaned_data[
+                'notification_type'
+            ]
+
+            if send_to == 'all':
+
+                Notification.objects.create(
+                    title=title,
+                    message=message_text,
+                    notification_type=notification_type,
+                    is_global=True
+                )
+
+            elif send_to == 'shop' and selected_shop:
+
+                Notification.objects.create(
+                    shop=selected_shop,
+                    title=title,
+                    message=message_text,
+                    notification_type=notification_type,
+                    is_global=False
+                )
+
+            messages.success(
+                request,
+                'Notification sent successfully.'
+            )
+
+            return redirect('admin_dashboard')
+
+
+    # =========================================================
+    # CONTEXT
+    # =========================================================
+
+    context = {
+
+        'total_shops': total_shops,
+        'active_shops': active_shops,
+        'marketplace_shops': marketplace_shops,
+        'private_qr_shops': private_qr_shops,
+
+        'total_requests': total_requests,
+        'open_requests': open_requests,
+        'marketplace_requests': marketplace_requests,
+        'private_requests': private_requests,
+
+        'total_quotes': total_quotes,
+        'accepted_orders': accepted_orders,
+        'completed_orders': completed_orders,
+        'total_reviews': total_reviews,
+
+        'recent_requests': recent_requests,
+
+        'shops': shops,
+
+        'notification_form': notification_form,
+    }
+
+    return render(
+        request,
+        'quotes/admin_dashboard.html',
+        context
+    )
+@login_required(login_url='shop_login')
+@require_POST
+def mark_notification_read(request, notification_id):
+    shop = get_object_or_404(
+        Shop,
+        user=request.user
+    )
+
+    notification = get_object_or_404(
+        Notification,
+        id=notification_id
+    )
+
+    if notification.shop == shop or notification.is_global:
+        NotificationRead.objects.get_or_create(
+            notification=notification,
+            shop=shop
+        )
+
+    return redirect('shop_dashboard')
 # =========================================================
 # SHOP REVIEWS
 # =========================================================
@@ -659,12 +872,16 @@ def shop_reviews(request):
 
 @login_required(login_url='shop_login')
 def submit_quote(request, request_id):
+
     part_request = get_object_or_404(
         PartRequest,
         id=request_id
     )
 
-    # Check whether current round has expired
+    # =========================================================
+    # CHECK WHETHER REQUEST HAS EXPIRED
+    # =========================================================
+
     expiry_time = timezone.now() - timedelta(hours=24)
 
     if (
@@ -674,48 +891,81 @@ def submit_quote(request, request_id):
         part_request.status = 'expired'
         part_request.save()
 
-    # Block quoting on closed or expired requests
+    # =========================================================
+    # BLOCK CLOSED REQUESTS
+    # =========================================================
+
     if part_request.status in [
         'accepted',
         'expired',
         'completed'
     ]:
-        return redirect(
-            'shop_dashboard'
-        )
+        return redirect('shop_dashboard')
+
+    # =========================================================
+    # GET CURRENT SHOP
+    # =========================================================
 
     shop = get_object_or_404(
         Shop,
         user=request.user
     )
 
-    # Check whether this shop already has a quote
+    # =========================================================
+    # SECURITY - CHECK SHOP ACCESS
+    # =========================================================
+
+    if not shop.is_active:
+        return redirect('shop_dashboard')
+
+    # Marketplace and mechanic QR requests
+    if part_request.request_source in [
+        'marketplace',
+        'mechanic_qr'
+    ]:
+
+        if not shop.marketplace_enabled:
+            return redirect('shop_dashboard')
+
+    # Private shop QR request
+    elif part_request.request_source == 'shop_qr':
+
+        if (
+            not shop.private_qr_enabled
+            or part_request.source_shop_id != shop.id
+        ):
+            return redirect('shop_dashboard')
+
+    # Unknown request source
+    else:
+        return redirect('shop_dashboard')
+
+    # =========================================================
+    # CHECK EXISTING QUOTE
+    # =========================================================
+
     existing_quote = Quote.objects.filter(
         part_request=part_request,
         shop=shop
     ).first()
 
-    # -----------------------------------------------------
+    # =========================================================
     # ALREADY QUOTED IN CURRENT ROUND
-    # -----------------------------------------------------
+    # =========================================================
 
     if (
         existing_quote
         and existing_quote.quote_round
         == part_request.request_round
     ):
-        return redirect(
-            'shop_dashboard'
-        )
+        return redirect('shop_dashboard')
 
-    # -----------------------------------------------------
+    # =========================================================
     # POST
-    # -----------------------------------------------------
+    # =========================================================
 
     if request.method == 'POST':
 
-        # Existing old-round quote:
-        # update the same quote instead of creating another.
         if existing_quote:
 
             form = QuoteForm(
@@ -738,7 +988,6 @@ def submit_quote(request, request_id):
             quote.part_request = part_request
             quote.shop = shop
 
-            # Mark quote as confirmed for current round
             quote.quote_round = (
                 part_request.request_round
             )
@@ -749,14 +998,12 @@ def submit_quote(request, request_id):
                 'shop_dashboard'
             )
 
-    # -----------------------------------------------------
+    # =========================================================
     # GET
-    # -----------------------------------------------------
+    # =========================================================
 
     else:
 
-        # Pre-fill old quote so supplier can change
-        # price, stock and notes.
         if existing_quote:
 
             form = QuoteForm(
@@ -767,6 +1014,10 @@ def submit_quote(request, request_id):
 
             form = QuoteForm()
 
+    # =========================================================
+    # RENDER
+    # =========================================================
+
     return render(
         request,
         'quotes/submit_quote.html',
@@ -774,13 +1025,9 @@ def submit_quote(request, request_id):
             'form': form,
             'part_request': part_request,
             'shop': shop,
-
-            # Template can use this to display
-            # "Update Quote" instead of "Send Quote"
             'is_update': bool(existing_quote),
         }
     )
-
 
 # =========================================================
 # SHOP REGISTRATION
@@ -1008,7 +1255,6 @@ def submit_review(request, public_id):
         'request_detail',
         public_id=part_request.public_id
     )
-
 # =========================================================
 # CUSTOMER - TRACK REQUEST
 # =========================================================
@@ -1055,3 +1301,30 @@ def track_request(request):
             'error_message': error_message,
         }
     )
+
+from django.views.decorators.http import require_POST
+
+
+@staff_member_required
+@require_POST
+def update_shop_access(request, shop_id):
+
+    shop = get_object_or_404(
+        Shop,
+        id=shop_id
+    )
+
+    action = request.POST.get('action')
+
+    if action == 'toggle_active':
+        shop.is_active = not shop.is_active
+
+    elif action == 'toggle_marketplace':
+        shop.marketplace_enabled = not shop.marketplace_enabled
+
+    elif action == 'toggle_private_qr':
+        shop.private_qr_enabled = not shop.private_qr_enabled
+
+    shop.save()
+
+    return redirect('admin_dashboard')

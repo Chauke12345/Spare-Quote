@@ -470,6 +470,30 @@
 
         {% endif %}
 
+        <!-- =========================
+     DJANGO MESSAGES
+========================== -->
+
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="error-message">
+
+            <span>
+                ⚠
+            </span>
+
+            <span>
+                {{ message }}
+            </span>
+
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+
 
 
         <!-- =========================

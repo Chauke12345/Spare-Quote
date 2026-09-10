@@ -326,20 +326,28 @@
 
 
 
-    <!-- SUCCESS CARD -->
-
     <div class="success-card">
 
+    <div class="success-icon">
+        ✓
+    </div>
 
-        <div class="success-icon">
-            ✓
-        </div>
+    <h1>
+        Request Submitted Successfully
+    </h1>
 
 
-        <h1>
-            Request Submitted Successfully
-        </h1>
+    <!-- SUCCESS MESSAGE -->
 
+    {% if part_request.request_source == 'shop_qr' and part_request.source_shop %}
+
+        <p class="success-message">
+            Your spare-part request has been sent directly to
+            <strong>{{ part_request.source_shop.shop_name }}</strong>.
+            They can now review your request and send you a quotation.
+        </p>
+
+    {% else %}
 
         <p class="success-message">
             Your spare-part request has been received.
@@ -347,15 +355,27 @@
             and send you quotations.
         </p>
 
+    {% endif %}
 
 
-        <!-- WHAT HAPPENS NEXT -->
+    <!-- WHAT HAPPENS NEXT -->
 
-        <div class="next-step">
+    <div class="next-step">
 
-            <div class="next-step-title">
-                What happens next?
-            </div>
+        <div class="next-step-title">
+            What happens next?
+        </div>
+
+        {% if part_request.request_source == 'shop_qr' and part_request.source_shop %}
+
+            <p>
+                {{ part_request.source_shop.shop_name }}
+                will review your vehicle and part details.
+                Once they submit a quotation, you can review the price
+                and decide whether you would like to accept it.
+            </p>
+
+        {% else %}
 
             <p>
                 Shops will review your vehicle and part details.
@@ -363,119 +383,138 @@
                 prices and choose the offer that works best for you.
             </p>
 
-        </div>
-
-
-
-        <!-- PROCESS -->
-
-        <div class="process">
-
-
-            <div class="process-item">
-
-                <span class="process-icon">
-                    🔧
-                </span>
-
-                <div>
-
-                    <strong>
-                        Shops Review
-                    </strong>
-
-                    Your request is reviewed.
-
-                </div>
-
-            </div>
-
-
-            <div class="process-item">
-
-                <span class="process-icon">
-                    💰
-                </span>
-
-                <div>
-
-                    <strong>
-                        Receive Quotes
-                    </strong>
-
-                    Shops send their prices.
-
-                </div>
-
-            </div>
-
-
-            <div class="process-item">
-
-                <span class="process-icon">
-                    ✓
-                </span>
-
-                <div>
-
-                    <strong>
-                        Choose a Quote
-                    </strong>
-
-                    Select your preferred shop.
-
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-
-        <!-- ACTIONS -->
-
-        <div class="actions">
-
-
-            {% if part_request %}
-
-                <a
-                    class="btn btn-primary"
-                    href="{% url 'request_detail' part_request.public_id %}"
-                >
-                    View My Request
-                </a>
-
-            {% endif %}
-
-
-            <a
-    class="btn {% if part_request %}btn-secondary{% else %}btn-primary{% endif %}"
-    href="{% url 'request_part' %}"
->
-    Request Another Part
-</a>
-
-<a
-    href="{% url 'request_detail' public_id=public_id %}"
-    class="btn"
->
-    View My Request
-</a>
-
-
-        <p class="foot-note">
-            Keep your request page available so you can return and check for new quotations.
-        </p>
-
+        {% endif %}
 
     </div>
+
+
+    <!-- PROCESS -->
+
+    <div class="process">
+
+        <div class="process-item">
+
+            <span class="process-icon">
+                🔧
+            </span>
+
+            <div>
+
+                <strong>
+                    {% if part_request.request_source == 'shop_qr' %}
+                        Shop Reviews
+                    {% else %}
+                        Shops Review
+                    {% endif %}
+                </strong>
+
+                Your request is reviewed.
+
+            </div>
+
+        </div>
+
+
+        <div class="process-item">
+
+            <span class="process-icon">
+                💰
+            </span>
+
+            <div>
+
+                <strong>
+                    Receive Quote
+                </strong>
+
+                {% if part_request.request_source == 'shop_qr' %}
+                    The shop sends its price.
+                {% else %}
+                    Shops send their prices.
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <div class="process-item">
+
+            <span class="process-icon">
+                ✓
+            </span>
+
+            <div>
+
+                <strong>
+                    {% if part_request.request_source == 'shop_qr' %}
+                        Review Quote
+                    {% else %}
+                        Choose a Quote
+                    {% endif %}
+                </strong>
+
+                {% if part_request.request_source == 'shop_qr' %}
+                    Accept the quotation if it suits you.
+                {% else %}
+                    Select your preferred shop.
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="actions">
+
+        <a
+            class="btn btn-primary"
+            href="{% url 'request_detail' part_request.public_id %}"
+        >
+            View My Request
+        </a>
+
+
+        {% if part_request.request_source == 'shop_qr' and part_request.source_shop %}
+
+            <a
+                class="btn btn-secondary"
+                href="{% url 'shop_request_part' part_request.source_shop.id %}"
+            >
+                Request Another Part
+            </a>
+
+        {% else %}
+
+            <a
+                class="btn btn-secondary"
+                href="{% url 'request_part' %}"
+            >
+                Request Another Part
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <p class="foot-note">
+        Keep your request page available so you can return and check for new quotations.
+    </p>
+
+</div>
+
 
 
 </div>
 
 
+
 </body>
+
 
 </html>

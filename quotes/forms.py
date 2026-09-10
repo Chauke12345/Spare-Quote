@@ -240,3 +240,45 @@ class TrackRequestForm(forms.Form):
             'placeholder': 'Example: 0712345678'
         })
     )
+
+    from django import forms
+from .models import Shop
+
+
+class AdminNotificationForm(forms.Form):
+
+    SEND_TO_CHOICES = [
+        ('all', 'All Shops'),
+        ('shop', 'Specific Shop'),
+    ]
+
+    send_to = forms.ChoiceField(
+        choices=SEND_TO_CHOICES
+    )
+
+    shop = forms.ModelChoiceField(
+        queryset=Shop.objects.filter(is_active=True).order_by('shop_name'),
+        required=False
+    )
+
+    title = forms.CharField(
+        max_length=150
+    )
+
+    message = forms.CharField(
+        widget=forms.Textarea(
+            attrs={
+                'rows': 4,
+                'placeholder': 'Write your notification message...'
+            }
+        )
+    )
+
+    notification_type = forms.ChoiceField(
+        choices=[
+            ('info', 'Information'),
+            ('warning', 'Warning'),
+            ('success', 'Success'),
+            ('maintenance', 'Maintenance'),
+        ]
+    )

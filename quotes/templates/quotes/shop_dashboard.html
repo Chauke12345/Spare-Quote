@@ -130,6 +130,52 @@
         font-size: 12px;
     }
 
+/* =========================
+   SHOP NOTIFICATION CARDS
+========================= */
+
+.notifications-section {
+    margin: 20px 0 30px;
+}
+
+.notifications-title {
+    margin-bottom: 12px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.notification-card {
+    background: #ffffff;
+    border-left: 5px solid #2563eb;
+
+    padding: 16px 18px;
+    margin-bottom: 12px;
+
+    border-radius: 10px;
+
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.notification-card.info {
+    background: #eff6ff;
+    border-left-color: #2563eb;
+}
+
+.notification-card.warning {
+    background: #fff7ed;
+    border-left-color: #d97706;
+}
+
+.notification-card.success {
+    background: #f0fdf4;
+    border-left-color: #16a34a;
+}
+
+.notification-card.maintenance {
+    background: #fef2f2;
+    border-left-color: #dc2626;
+}
+
     .logout-btn {
         display: inline-flex;
         align-items: center;
@@ -152,6 +198,29 @@
     .logout-btn:hover {
         background: #f3f4f6;
     }
+
+    .mark-read-form {
+    margin-top: 10px;
+}
+
+.mark-read-btn {
+    border: none;
+    border-radius: 7px;
+
+    padding: 7px 11px;
+
+    background: #e5e7eb;
+    color: #374151;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+.mark-read-btn:hover {
+    background: #d1d5db;
+}
 
     /* =========================
        SECTION HEADER
@@ -901,81 +970,164 @@ a.quote-btn.whatsapp-btn:hover {
 </div>
 
 
-    <!-- =========================
-         HEADER
-    ========================== -->
+   <!-- =========================
+     HEADER
+========================= -->
 
-    <div class="page-header">
+<div class="page-header">
 
-        <div class="header-title">
+    <div class="header-title">
 
-            <h1>
-                Shop Dashboard
-            </h1>
+        <h1>
+            Shop Dashboard
+        </h1>
 
-            <p>
-                Welcome,
-                <strong class="shop-name">
-                    {{ request.user.shop_profile.shop_name }}
-                </strong>
-            </p>
+        <p>
+            Welcome,
+            <strong class="shop-name">
+                {{ request.user.shop_profile.shop_name }}
+            </strong>
+        </p>
 
-            <p>
-                Manage spare-part requests and send quotations to customers.
-            </p>
+        <p>
+            Manage spare-part requests and send quotations to customers.
+        </p>
+
+    </div>
+
+<div class="header-actions">
+
+    {% if new_request_count > 0 %}
+
+        <div class="notification-box notification-active">
+
+            <span class="notification-bell">
+                🔔
+            </span>
+
+            <span class="notification-text">
+
+                {% if new_request_count == 1 %}
+                    1 Request Needs Action
+                {% else %}
+                    {{ new_request_count }} Requests Need Action
+                {% endif %}
+
+            </span>
 
         </div>
 
+    {% else %}
 
-        <div class="header-actions">
+        <div class="notification-box notification-clear">
 
-            {% if new_request_count > 0 %}
+            <span class="notification-check">
+                ✓
+            </span>
 
-                <div class="notification-box notification-active">
+            <span class="notification-text">
+                All Caught Up
+            </span>
 
-                    <span class="notification-bell">
-                        🔔
-                    </span>
+        </div>
 
-                    <span class="notification-text">
+    {% endif %}
 
-                        {% if new_request_count == 1 %}
-                            1 Request Needs Action
-                        {% else %}
-                            {{ new_request_count }} Requests Need Action
-                        {% endif %}
 
-                    </span>
+    {% if unread_notification_count > 0 %}
 
-                </div>
+        <div class="notification-box notification-active">
 
-            {% else %}
+            <span class="notification-bell">
+                🔔
+            </span>
 
-                <div class="notification-box notification-clear">
+            <span class="notification-text">
 
-                    <span class="notification-check">
-                        ✓
-                    </span>
+                {% if unread_notification_count == 1 %}
+                    1 New Notification
+                {% else %}
+                    {{ unread_notification_count }} New Notifications
+                {% endif %}
 
-                    <span class="notification-text">
-                        All Caught Up
-                    </span>
+            </span>
 
-                </div>
+        </div>
+
+    {% endif %}
+
+
+    <a
+        href="{% url 'shop_logout' %}"
+        class="logout-btn"
+    >
+        Logout
+    </a>
+
+</div>
+
+</div>
+
+
+<!-- =========================
+     SHOP NOTIFICATIONS
+========================= -->
+
+{% if notifications %}
+
+<section class="notifications-section">
+
+    <h2 class="notifications-title">
+        🔔 Notifications
+    </h2>
+
+    {% for notification in notifications %}
+
+        <div class="notification-card {{ notification.notification_type }}">
+
+            <div class="notification-header">
+
+                <strong>
+                    {{ notification.title }}
+                </strong>
+
+                <span>
+                    {{ notification.created_at|date:"d M Y, H:i" }}
+                </span>
+
+            </div>
+
+            <p>
+                {{ notification.message }}
+            </p>
+
+            {% if not notification.is_read_for_shop %}
+
+                <form
+                    method="POST"
+                    action="{% url 'mark_notification_read' notification.id %}"
+                    class="mark-read-form"
+                >
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="mark-read-btn"
+                    >
+                        ✓ Mark as read
+                    </button>
+
+                </form>
 
             {% endif %}
 
+        </div>
 
-        <a
-    href="{% url 'shop_logout' %}"
-    class="logout-btn"
->
-    Logout
-</a>
+    {% endfor %}
 
-</div>
+</section>
 
-</div>
+{% endif %}
 
 <!-- =========================
      OPEN REQUESTS

@@ -328,7 +328,7 @@
 
 <body>
 
-```
+
 <div class="page-wrapper">
 
     <div class="header">
@@ -337,13 +337,26 @@
             SpareQuote
         </div>
 
-        <h1>Find Your Spare Part</h1>
+       {% if source_shop %}
 
-        <p>
-            Tell us what part you need once.
-            Local spare-parts shops can review your request
-            and send you quotes.
-        </p>
+    <h1>Request a Part from {{ source_shop.shop_name }}</h1>
+
+    <p>
+        Send your spare-part request directly to
+        {{ source_shop.shop_name }} for a quotation.
+    </p>
+
+{% else %}
+
+    <h1>Find Your Spare Part</h1>
+
+    <p>
+        Tell us what part you need once.
+        Local spare-parts shops can review your request
+        and send you quotes.
+    </p>
+
+{% endif %}
 
     </div>
 
@@ -586,13 +599,27 @@
 
             <div class="submit-area">
 
-                <button class="submit-btn" type="submit">
-                    Request Quotes
-                </button>
+               {% if source_shop %}
 
-                <p class="submit-note">
-                    Your request will be shared with participating spare-parts shops.
-                </p>
+    <button class="submit-btn" type="submit">
+        Request Quote from {{ source_shop.shop_name }}
+    </button>
+
+    <p class="submit-note">
+        Your request will only be sent to {{ source_shop.shop_name }}.
+    </p>
+
+{% else %}
+
+    <button class="submit-btn" type="submit">
+        Request Quotes
+    </button>
+
+    <p class="submit-note">
+        Your request will be shared with participating spare-parts shops.
+    </p>
+
+{% endif %}
 
             </div>
 
@@ -601,7 +628,8 @@
     </div>
 
 </div>
-```
+
+
 
 </body>
 </html>

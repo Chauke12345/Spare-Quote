@@ -7,11 +7,18 @@ urlpatterns = [
     # CUSTOMER
     # =====================================================
 
-    # Request a spare part
+    # Request a spare part - Open Marketplace
     path(
         '',
         views.request_part,
         name='request_part'
+    ),
+
+    # Request a spare part - Private Shop QR
+    path(
+        'shop-request/<int:shop_id>/',
+        views.request_part,
+        name='shop_request_part'
     ),
 
     # Request success page
@@ -108,4 +115,22 @@ urlpatterns = [
         views.mark_completed,
         name='mark_completed'
     ),
+
+    path(
+    'sparequote-admin/',
+    views.admin_dashboard,
+    name='admin_dashboard'
+),
+
+path(
+    'sparequote-admin/shop/<int:shop_id>/access/',
+    views.update_shop_access,
+    name='update_shop_access'
+),
+
+path(
+    'shop/notification/<int:notification_id>/read/',
+    views.mark_notification_read,
+    name='mark_notification_read'
+),
 ]

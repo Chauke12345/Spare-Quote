@@ -3,6 +3,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 import uuid
 
+
 class Shop(models.Model):
     user = models.OneToOneField(
         User,
@@ -15,11 +16,23 @@ class Shop(models.Model):
     email = models.EmailField(blank=True)
     location = models.CharField(max_length=150)
     address = models.TextField(blank=True)
+
     is_active = models.BooleanField(default=True)
+
+    # SHOP PACKAGE OPTIONS
+    marketplace_enabled = models.BooleanField(
+        default=True
+    )
+
+    private_qr_enabled = models.BooleanField(
+        default=False
+    )
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.shop_name
+
 
 
 class PartRequest(models.Model):
@@ -30,6 +43,10 @@ class PartRequest(models.Model):
         editable=False
     )
 
+    # =========================================================
+    # STATUS OPTIONS
+    # =========================================================
+
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('quoted', 'Quoted'),
@@ -38,20 +55,50 @@ class PartRequest(models.Model):
         ('completed', 'Completed'),
     ]
 
-    # CUSTOMER DETAILS
-    customer_name = models.CharField(max_length=100)
-    phone_number = models.CharField(max_length=20)
-    location = models.CharField(max_length=150)
+    # =========================================================
+    # REQUEST SOURCE OPTIONS
+    # =========================================================
 
+    REQUEST_SOURCE_CHOICES = [
+        ('marketplace', 'Marketplace'),
+        ('mechanic_qr', 'Mechanic QR'),
+        ('shop_qr', 'Shop QR'),
+    ]
+
+    # =========================================================
+    # CUSTOMER DETAILS
+    # =========================================================
+
+    customer_name = models.CharField(
+        max_length=100
+    )
+
+    phone_number = models.CharField(
+        max_length=20
+    )
+
+    location = models.CharField(
+        max_length=150
+    )
+
+    # =========================================================
     # VEHICLE DETAILS
+    # =========================================================
+
     vin_number = models.CharField(
         max_length=17,
         blank=True,
         help_text="17-character Vehicle Identification Number"
     )
 
-    vehicle_make = models.CharField(max_length=100)
-    vehicle_model = models.CharField(max_length=100)
+    vehicle_make = models.CharField(
+        max_length=100
+    )
+
+    vehicle_model = models.CharField(
+        max_length=100
+    )
+
     vehicle_year = models.PositiveIntegerField()
 
     engine_details = models.CharField(
@@ -60,8 +107,13 @@ class PartRequest(models.Model):
         help_text="Example: 1.6 petrol, 2.0 TDI, 1.4 TSI"
     )
 
+    # =========================================================
     # PART DETAILS
-    part_name = models.CharField(max_length=200)
+    # =========================================================
+
+    part_name = models.CharField(
+        max_length=200
+    )
 
     part_description = models.TextField(
         blank=True,
@@ -75,24 +127,56 @@ class PartRequest(models.Model):
         help_text="Upload a photo of the part if available"
     )
 
+    # =========================================================
     # REQUEST STATUS
+    # =========================================================
+
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
         default='pending'
     )
 
+    # =========================================================
     # REQUEST ROUND
+    # =========================================================
+
     request_round = models.PositiveIntegerField(
         default=1
     )
 
+    # =========================================================
+    # REQUEST SOURCE
+    # =========================================================
+
+    request_source = models.CharField(
+        max_length=20,
+        choices=REQUEST_SOURCE_CHOICES,
+        default='marketplace'
+    )
+
+    # Used only when the request comes through
+    # a specific shop's private QR code.
+    source_shop = models.ForeignKey(
+        Shop,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='private_requests'
+    )
+
+    # =========================================================
     # DATE CREATED
+    # =========================================================
+
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+    # =========================================================
     # WHATSAPP NUMBER
+    # =========================================================
+
     @property
     def whatsapp_number(self):
         number = (
@@ -111,12 +195,17 @@ class PartRequest(models.Model):
 
         return number
 
+    # =========================================================
+    # DISPLAY NAME
+    # =========================================================
+
     def __str__(self):
         return (
             f"Request #{self.id} - "
             f"{self.vehicle_make} {self.vehicle_model} - "
             f"{self.part_name}"
         )
+
 class Quote(models.Model):
 
     part_request = models.ForeignKey(
@@ -201,6 +290,7 @@ class Quote(models.Model):
     def __str__(self):
         return f"{self.shop_name} - R{self.price}"
 
+
 class Review(models.Model):
 
     part_request = models.OneToOneField(
@@ -229,4 +319,87 @@ class Review(models.Model):
         return (
             f"{self.shop.shop_name} - "
             f"{self.rating}/5"
+        )
+
+class Notification(models.Model):
+
+    NOTIFICATION_TYPE_CHOICES = [
+        ('info', 'Information'),
+        ('warning', 'Warning'),
+        ('success', 'Success'),
+        ('maintenance', 'Maintenance'),
+    ]
+
+    shop = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        null=True,
+        blank=True
+    )
+
+    title = models.CharField(
+        max_length=150
+    )
+
+    message = models.TextField()
+
+    notification_type = models.CharField(
+        max_length=20,
+        choices=NOTIFICATION_TYPE_CHOICES,
+        default='info'
+    )
+
+    is_global = models.BooleanField(
+        default=False,
+        help_text='If enabled, this notification is intended for all shops.'
+    )
+
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    def __str__(self):
+        if self.is_global:
+            return f"Global - {self.title}"
+
+        if self.shop:
+            return f"{self.shop.shop_name} - {self.title}"
+
+        return self.title
+
+class NotificationRead(models.Model):
+
+    notification = models.ForeignKey(
+        Notification,
+        on_delete=models.CASCADE,
+        related_name='read_receipts'
+    )
+
+    shop = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='notification_reads'
+    )
+
+    read_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'notification',
+                    'shop'
+                ],
+                name='unique_notification_read_per_shop'
+            )
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.shop.shop_name} - "
+            f"{self.notification.title}"
         )
