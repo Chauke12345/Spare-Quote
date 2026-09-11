@@ -1,10 +1,21 @@
 from django import forms
 from django.contrib.auth.models import User
 
-from .models import PartRequest, Quote, Review
+from .models import (
+    PartRequest,
+    Quote,
+    Review,
+    Shop,
+    SupportTicket,
+)
 
+
+# =========================================================
+# PART REQUEST FORM
+# =========================================================
 
 class PartRequestForm(forms.ModelForm):
+
     class Meta:
         model = PartRequest
 
@@ -60,7 +71,9 @@ class PartRequestForm(forms.ModelForm):
             }),
 
             'part_description': forms.Textarea(attrs={
-                'placeholder': 'Describe the part you need or the vehicle problem...'
+                'placeholder': (
+                    'Describe the part you need or the vehicle problem...'
+                )
             }),
 
             'part_image': forms.ClearableFileInput(attrs={
@@ -69,9 +82,11 @@ class PartRequestForm(forms.ModelForm):
         }
 
     def clean_phone_number(self):
-        phone_number = self.cleaned_data.get('phone_number', '')
+        phone_number = self.cleaned_data.get(
+            'phone_number',
+            ''
+        )
 
-        # Remove common formatting characters
         cleaned = (
             phone_number
             .replace(' ', '')
@@ -80,30 +95,26 @@ class PartRequestForm(forms.ModelForm):
             .replace(')', '')
         )
 
-        # Convert +27 format to local 0 format
         if cleaned.startswith('+27'):
             local_number = '0' + cleaned[3:]
 
-        # Convert 27 format to local 0 format
         elif cleaned.startswith('27'):
             local_number = '0' + cleaned[2:]
 
         else:
             local_number = cleaned
 
-        # Must contain digits only
         if not local_number.isdigit():
             raise forms.ValidationError(
                 'Please enter a valid phone number.'
             )
 
-        # South African local numbers should have 10 digits
         if len(local_number) != 10:
             raise forms.ValidationError(
-                'Please enter a valid 10-digit South African phone number, e.g. 071 234 5678.'
+                'Please enter a valid 10-digit South African '
+                'phone number, e.g. 071 234 5678.'
             )
 
-        # Local format must begin with 0
         if not local_number.startswith('0'):
             raise forms.ValidationError(
                 'Please enter a valid South African phone number.'
@@ -111,7 +122,13 @@ class PartRequestForm(forms.ModelForm):
 
         return local_number
 
+
+# =========================================================
+# QUOTE FORM
+# =========================================================
+
 class QuoteForm(forms.ModelForm):
+
     class Meta:
         model = Quote
 
@@ -132,9 +149,18 @@ class QuoteForm(forms.ModelForm):
             }),
 
             'notes': forms.Textarea(attrs={
-                'placeholder': 'e.g. Front brake pad set available for collection today.'
+                'placeholder': (
+                    'e.g. Front brake pad set available '
+                    'for collection today.'
+                )
             }),
         }
+
+
+# =========================================================
+# REVIEW FORM
+# =========================================================
+
 class ReviewForm(forms.ModelForm):
 
     RATING_CHOICES = [
@@ -160,13 +186,20 @@ class ReviewForm(forms.ModelForm):
 
         widgets = {
             'comment': forms.Textarea(attrs={
-                'placeholder': 'Tell us about your experience with the shop...',
+                'placeholder': (
+                    'Tell us about your experience with the shop...'
+                ),
                 'rows': 4
             }),
         }
 
 
+# =========================================================
+# SHOP REGISTRATION FORM
+# =========================================================
+
 class ShopRegistrationForm(forms.Form):
+
     username = forms.CharField(
         max_length=150,
         widget=forms.TextInput(attrs={
@@ -218,18 +251,28 @@ class ShopRegistrationForm(forms.Form):
     def clean_username(self):
         username = self.cleaned_data['username']
 
-        if User.objects.filter(username__iexact=username).exists():
+        if User.objects.filter(
+            username__iexact=username
+        ).exists():
             raise forms.ValidationError(
-                'This username is already taken. Please choose another.'
+                'This username is already taken. '
+                'Please choose another.'
             )
 
         return username
+
+
+# =========================================================
+# TRACK REQUEST FORM
+# =========================================================
+
 class TrackRequestForm(forms.Form):
 
-    request_id = forms.IntegerField(
-        label='Request Number',
-        widget=forms.NumberInput(attrs={
-            'placeholder': 'Example: 16'
+    customer_name = forms.CharField(
+        label='Customer Name',
+        max_length=150,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Enter the name used on your request'
         })
     )
 
@@ -241,9 +284,61 @@ class TrackRequestForm(forms.Form):
         })
     )
 
-    from django import forms
-from .models import Shop
+    def clean_customer_name(self):
+        customer_name = self.cleaned_data.get(
+            'customer_name',
+            ''
+        ).strip()
 
+        if not customer_name:
+            raise forms.ValidationError(
+                'Please enter your customer name.'
+            )
+
+        return customer_name
+
+    def clean_phone_number(self):
+        phone_number = self.cleaned_data.get(
+            'phone_number',
+            ''
+        )
+
+        cleaned = (
+            phone_number
+            .replace(' ', '')
+            .replace('-', '')
+            .replace('(', '')
+            .replace(')', '')
+        )
+
+        if cleaned.startswith('+27'):
+            cleaned = '0' + cleaned[3:]
+
+        elif cleaned.startswith('27'):
+            cleaned = '0' + cleaned[2:]
+
+        if not cleaned.isdigit():
+            raise forms.ValidationError(
+                'Please enter a valid phone number.'
+            )
+
+        if len(cleaned) != 10:
+            raise forms.ValidationError(
+                'Please enter a valid 10-digit South African '
+                'phone number, e.g. 071 234 5678.'
+            )
+
+        if not cleaned.startswith('0'):
+            raise forms.ValidationError(
+                'Please enter a valid South African phone number.'
+            )
+
+        return cleaned
+
+
+# =========================================================
+# ADMIN NOTIFICATION FORM
+# =========================================================
 
 class AdminNotificationForm(forms.Form):
 
@@ -257,7 +352,11 @@ class AdminNotificationForm(forms.Form):
     )
 
     shop = forms.ModelChoiceField(
-        queryset=Shop.objects.filter(is_active=True).order_by('shop_name'),
+        queryset=Shop.objects.filter(
+            is_active=True
+        ).order_by(
+            'shop_name'
+        ),
         required=False
     )
 
@@ -266,12 +365,12 @@ class AdminNotificationForm(forms.Form):
     )
 
     message = forms.CharField(
-        widget=forms.Textarea(
-            attrs={
-                'rows': 4,
-                'placeholder': 'Write your notification message...'
-            }
-        )
+        widget=forms.Textarea(attrs={
+            'rows': 4,
+            'placeholder': (
+                'Write your notification message...'
+            )
+        })
     )
 
     notification_type = forms.ChoiceField(
@@ -283,10 +382,10 @@ class AdminNotificationForm(forms.Form):
         ]
     )
 
-    from django import forms
 
-from .models import SupportTicket
-
+# =========================================================
+# SUPPORT TICKET FORM
+# =========================================================
 
 class SupportTicketForm(forms.ModelForm):
 
@@ -300,27 +399,23 @@ class SupportTicketForm(forms.ModelForm):
         ]
 
         widgets = {
-            'category': forms.Select(
-                attrs={
-                    'class': 'form-control'
-                }
-            ),
+            'category': forms.Select(attrs={
+                'class': 'form-control'
+            }),
 
-            'subject': forms.TextInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Briefly describe the problem'
-                }
-            ),
+            'subject': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': (
+                    'Briefly describe the problem'
+                )
+            }),
 
-            'message': forms.Textarea(
-                attrs={
-                    'class': 'form-control',
-                    'rows': 5,
-                    'placeholder': (
-                        'Describe what happened, what you were trying '
-                        'to do, and any error message you saw.'
-                    )
-                }
-            ),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': (
+                    'Describe what happened, what you were trying '
+                    'to do, and any error message you saw.'
+                )
+            }),
         }

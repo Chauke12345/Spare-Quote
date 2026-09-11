@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>You're All Set | SpareQuote</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6f9;
+            color: #1f2937;
+
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 24px 16px;
+        }
+
+        .done-card {
+            width: 100%;
+            max-width: 520px;
+
+            background: #ffffff;
+
+            border: 1px solid #e5e7eb;
+            border-radius: 20px;
+
+            padding: 40px 32px;
+
+            text-align: center;
+
+            box-shadow:
+                0 12px 35px rgba(15, 23, 42, 0.08);
+        }
+
+        .done-icon {
+            width: 72px;
+            height: 72px;
+
+            margin: 0 auto 22px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #dcfce7;
+            color: #16a34a;
+
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        h1 {
+            color: #111827;
+            font-size: 30px;
+            margin-bottom: 12px;
+        }
+
+        .message {
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        .track-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+
+            background: #111827;
+            color: #ffffff;
+
+            text-decoration: none;
+
+            padding: 14px 18px;
+
+            border-radius: 10px;
+
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .track-btn:hover {
+            background: #000000;
+        }
+
+        .close-note {
+            margin-top: 18px;
+
+            color: #9ca3af;
+            font-size: 12px;
+        }
+
+        @media (max-width: 600px) {
+
+            .done-card {
+                padding: 32px 20px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="done-card">
+
+        <div class="done-icon">
+            ✓
+        </div>
+
+        <h1>
+            You're All Set
+        </h1>
+
+        <p class="message">
+            Your spare-part request has been submitted successfully.
+            You can return at any time and find your requests using
+            your customer name and phone number.
+        </p>
+
+        <a
+            href="{% url 'track_request' %}"
+            class="track-btn"
+        >
+            Find My Requests
+        </a>
+
+        <p class="close-note">
+            You can now close this page if you're finished.
+        </p>
+
+    </div>
+
+</body>
+
+</html>

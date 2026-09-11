@@ -718,7 +718,6 @@ def shop_support(request):
         }
     )
 
-
 # =========================================================
 # SPAREQUOTE ADMIN DASHBOARD
 # =========================================================
@@ -777,8 +776,65 @@ def admin_dashboard(request):
     total_reviews = Review.objects.count()
 
 
+  
     # =========================================================
-    # RECENT REQUESTS
+    # SUPPORT TICKETS
+    # Prioritise unresolved tickets.
+    # =========================================================
+
+    support_tickets = SupportTicket.objects.select_related(
+        'shop'
+    ).filter(
+        status__in=[
+            'open',
+            'in_progress',
+        ]
+    ).order_by(
+        '-created_at'
+    )
+
+
+    # =========================================================
+    # SHOP PERFORMANCE
+    # =========================================================
+
+    shop_performance = []
+
+    for shop in Shop.objects.all().order_by('shop_name'):
+
+        quotes_sent = Quote.objects.filter(
+            shop=shop
+        ).count()
+
+        accepted_quotes = Quote.objects.filter(
+            shop=shop,
+            is_accepted=True
+        ).count()
+
+        private_qr_requests = PartRequest.objects.filter(
+            request_source='shop_qr',
+            source_shop=shop
+        ).count()
+
+        acceptance_rate = 0
+
+        if quotes_sent > 0:
+            acceptance_rate = round(
+                (accepted_quotes / quotes_sent) * 100,
+                1
+            )
+
+        shop_performance.append({
+            'shop': shop,
+            'quotes_sent': quotes_sent,
+            'accepted_quotes': accepted_quotes,
+            'acceptance_rate': acceptance_rate,
+            'private_qr_requests': private_qr_requests,
+        })
+
+
+    # =========================================================
+    # CONTINUE WITH YOUR EXISTING CODE BELOW
     # =========================================================
 
     recent_requests = PartRequest.objects.select_related(
@@ -857,7 +913,7 @@ def admin_dashboard(request):
             return redirect('admin_dashboard')
 
 
-    # =========================================================
+      # =========================================================
     # CONTEXT
     # =========================================================
 
@@ -885,6 +941,8 @@ def admin_dashboard(request):
         'notification_form': notification_form,
 
         'support_tickets': support_tickets,
+
+        'shop_performance': shop_performance,
     }
 
     return render(
@@ -892,9 +950,12 @@ def admin_dashboard(request):
         'quotes/admin_dashboard.html',
         context
     )
+
+
 @login_required(login_url='shop_login')
 @require_POST
 def mark_notification_read(request, notification_id):
+
     shop = get_object_or_404(
         Shop,
         user=request.user
@@ -906,12 +967,15 @@ def mark_notification_read(request, notification_id):
     )
 
     if notification.shop == shop or notification.is_global:
+
         NotificationRead.objects.get_or_create(
             notification=notification,
             shop=shop
         )
 
     return redirect('shop_dashboard')
+
+
 # =========================================================
 # SHOP REVIEWS
 # =========================================================
@@ -939,6 +1003,7 @@ def shop_reviews(request):
     average_rating = review_stats['average_rating']
 
     if average_rating is not None:
+
         average_rating = round(
             average_rating,
             1
@@ -1350,6 +1415,7 @@ def submit_review(request, public_id):
 def track_request(request):
 
     error_message = None
+    matching_requests = None
 
     if request.method == 'POST':
 
@@ -1357,25 +1423,20 @@ def track_request(request):
 
         if form.is_valid():
 
-            request_id = form.cleaned_data['request_id']
+            customer_name = form.cleaned_data['customer_name']
             phone_number = form.cleaned_data['phone_number']
 
-            part_request = PartRequest.objects.filter(
-                id=request_id,
+            matching_requests = PartRequest.objects.filter(
+                customer_name__iexact=customer_name,
                 phone_number=phone_number
-            ).first()
+            ).order_by('-created_at')
 
-            if part_request:
+            if not matching_requests.exists():
 
-                return redirect(
-                    'request_detail',
-                    public_id=part_request.public_id
+                error_message = (
+                    'We could not find any requests matching '
+                    'that customer name and phone number.'
                 )
-
-            error_message = (
-                'We could not find a request matching '
-                'that request number and phone number.'
-            )
 
     else:
 
@@ -1387,6 +1448,7 @@ def track_request(request):
         {
             'form': form,
             'error_message': error_message,
+            'matching_requests': matching_requests,
         }
     )
 
@@ -1528,3 +1590,14 @@ def private_shop_qr(request, shop_id):
     )
 
     return response
+
+# =========================================================
+# CUSTOMER - REQUEST DONE
+# =========================================================
+
+def request_done(request):
+
+    return render(
+        request,
+        'quotes/request_done.html'
+    )

@@ -1,635 +1,844 @@
 <!DOCTYPE html>
-
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-```
-<title>Request a Part | SpareQuote</title>
+    <title>Request a Part | SpareQuote</title>
 
-<style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        font-family: Arial, Helvetica, sans-serif;
-        background: #f3f6f9;
-        color: #1f2937;
-        line-height: 1.6;
-    }
-
-    .page-wrapper {
-        width: 92%;
-        max-width: 960px;
-        margin: 45px auto 70px;
-    }
-
-    /* =========================
-       PAGE HEADER
-    ========================= */
-
-    .header {
-        text-align: center;
-        margin-bottom: 32px;
-    }
-
-    .header-badge {
-        display: inline-block;
-        background: #e8f1ff;
-        color: #1d4ed8;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 7px 14px;
-        border-radius: 999px;
-        margin-bottom: 14px;
-    }
-
-    .header h1 {
-        font-size: 42px;
-        line-height: 1.15;
-        margin-bottom: 14px;
-        color: #111827;
-    }
-
-    .header p {
-        color: #6b7280;
-        max-width: 660px;
-        margin: 0 auto;
-        font-size: 16px;
-    }
-
-    /* =========================
-       FORM CARD
-    ========================= */
-
-    .form-card {
-        background: #ffffff;
-        padding: 42px;
-        border-radius: 20px;
-        box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
-        border: 1px solid #e5e7eb;
-    }
-
-    .form-section {
-        margin-bottom: 38px;
-    }
-
-    .form-section:last-of-type {
-        margin-bottom: 30px;
-    }
-
-    .section-heading {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-bottom: 22px;
-        padding-bottom: 14px;
-        border-bottom: 1px solid #e5e7eb;
-    }
-
-    .section-icon {
-        width: 42px;
-        height: 42px;
-        border-radius: 12px;
-        background: #f1f5f9;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 21px;
-        flex-shrink: 0;
-    }
-
-    .section-heading h2 {
-        font-size: 20px;
-        color: #111827;
-    }
-
-    .section-heading p {
-        font-size: 13px;
-        color: #6b7280;
-        margin-top: 2px;
-    }
-
-    /* =========================
-       FORM GRID
-    ========================= */
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 22px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .form-group.full-width {
-        grid-column: 1 / -1;
-    }
-
-    label {
-        font-weight: 700;
-        margin-bottom: 8px;
-        font-size: 14px;
-        color: #374151;
-    }
-
-    input,
-    textarea,
-    select {
-        width: 100%;
-        padding: 13px 14px;
-        border: 1px solid #d1d5db;
-        border-radius: 10px;
-        font-size: 15px;
-        color: #111827;
-        background: #ffffff;
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease,
-            background 0.2s ease;
-    }
-
-    input:hover,
-    textarea:hover,
-    select:hover {
-        border-color: #9ca3af;
-    }
-
-    input:focus,
-    textarea:focus,
-    select:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
-        background: #ffffff;
-    }
-
-    textarea {
-        min-height: 125px;
-        resize: vertical;
-    }
-
-    input[type="file"] {
-        padding: 10px;
-        background: #f9fafb;
-        cursor: pointer;
-    }
-
-    input[type="file"]::file-selector-button {
-        border: none;
-        background: #111827;
-        color: #ffffff;
-        padding: 9px 14px;
-        border-radius: 7px;
-        margin-right: 12px;
-        cursor: pointer;
-        font-weight: 600;
-    }
-
-    input[type="file"]::file-selector-button:hover {
-        background: #000000;
-    }
-
-    .help-text {
-        margin-top: 7px;
-        font-size: 12.5px;
-        color: #6b7280;
-    }
-
-    /* =========================
-       ERRORS
-    ========================= */
-
-    .errorlist {
-        list-style: none;
-        color: #b91c1c;
-        font-size: 13px;
-        margin-bottom: 7px;
-        background: #fef2f2;
-        padding: 7px 10px;
-        border-radius: 7px;
-        border: 1px solid #fecaca;
-    }
-
-    /* =========================
-       SUBMIT AREA
-    ========================= */
-
-    .submit-area {
-        margin-top: 8px;
-        padding-top: 26px;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .submit-btn {
-        width: 100%;
-        border: none;
-        background: #111827;
-        color: #ffffff;
-        padding: 16px 20px;
-        border-radius: 11px;
-        font-size: 16px;
-        font-weight: 700;
-        cursor: pointer;
-        transition:
-            transform 0.2s ease,
-            background 0.2s ease,
-            box-shadow 0.2s ease;
-    }
-
-    .submit-btn:hover {
-        background: #000000;
-        transform: translateY(-1px);
-        box-shadow: 0 8px 20px rgba(17, 24, 39, 0.16);
-    }
-
-    .submit-btn:active {
-        transform: translateY(0);
-    }
-
-    .submit-note {
-        text-align: center;
-        margin-top: 11px;
-        color: #6b7280;
-        font-size: 12px;
-    }
-
-    /* =========================
-       MOBILE
-    ========================= */
-
-    @media (max-width: 700px) {
-        .page-wrapper {
-            width: 94%;
-            margin: 25px auto 45px;
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f3f6f9;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        .page-wrapper {
+            width: 92%;
+            max-width: 960px;
+            margin: 45px auto 70px;
+        }
+
+        /* =========================
+           PAGE HEADER
+        ========================= */
+
         .header {
-            margin-bottom: 24px;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: #e8f1ff;
+            color: #1d4ed8;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 7px 14px;
+            border-radius: 999px;
+            margin-bottom: 14px;
         }
 
         .header h1 {
-            font-size: 31px;
+            font-size: 42px;
+            line-height: 1.15;
+            margin-bottom: 14px;
+            color: #111827;
         }
 
         .header p {
-            font-size: 14px;
+            color: #6b7280;
+            max-width: 660px;
+            margin: 0 auto;
+            font-size: 16px;
         }
+
+        /* =========================
+           FORM CARD
+        ========================= */
 
         .form-card {
-            padding: 24px 18px;
-            border-radius: 16px;
+            background: #ffffff;
+            padding: 42px;
+            border-radius: 20px;
+            box-shadow: 0 12px 35px rgba(15, 23, 42, 0.08);
+            border: 1px solid #e5e7eb;
         }
 
-        .form-grid {
-            grid-template-columns: 1fr;
-            gap: 18px;
+        .form-section {
+            margin-bottom: 38px;
         }
 
-        .form-group.full-width {
-            grid-column: auto;
+        .form-section:last-of-type {
+            margin-bottom: 30px;
         }
 
         .section-heading {
-            align-items: flex-start;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .section-icon {
-            width: 38px;
-            height: 38px;
-            font-size: 18px;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            flex-shrink: 0;
         }
 
         .section-heading h2 {
-            font-size: 18px;
+            font-size: 20px;
+            color: #111827;
+        }
+
+        .section-heading p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* =========================
+           FORM GRID
+        ========================= */
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: #374151;
         }
 
         input,
         textarea,
         select {
-            font-size: 16px;
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: 15px;
+            color: #111827;
+            background: #ffffff;
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease,
+                background 0.2s ease;
+        }
+
+        input:hover,
+        textarea:hover,
+        select:hover {
+            border-color: #9ca3af;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10);
+            background: #ffffff;
+        }
+
+        textarea {
+            min-height: 125px;
+            resize: vertical;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background: #f9fafb;
+            cursor: pointer;
+        }
+
+        input[type="file"]::file-selector-button {
+            border: none;
+            background: #111827;
+            color: #ffffff;
+            padding: 9px 14px;
+            border-radius: 7px;
+            margin-right: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        input[type="file"]::file-selector-button:hover {
+            background: #000000;
+        }
+
+        .help-text {
+            margin-top: 7px;
+            font-size: 12.5px;
+            color: #6b7280;
+        }
+
+        /* =========================
+           ERRORS
+        ========================= */
+
+        .errorlist {
+            list-style: none;
+            color: #b91c1c;
+            font-size: 13px;
+            margin-bottom: 7px;
+            background: #fef2f2;
+            padding: 7px 10px;
+            border-radius: 7px;
+            border: 1px solid #fecaca;
+        }
+
+        /* =========================
+           SUBMIT AREA
+        ========================= */
+
+        .submit-area {
+            margin-top: 8px;
+            padding-top: 26px;
+            border-top: 1px solid #e5e7eb;
         }
 
         .submit-btn {
-            padding: 15px;
+            width: 100%;
+            border: none;
+            background: #111827;
+            color: #ffffff;
+            padding: 16px 20px;
+            border-radius: 11px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease,
+                box-shadow 0.2s ease;
         }
-    }
-</style>
-```
 
+        .submit-btn:hover {
+            background: #000000;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 20px rgba(17, 24, 39, 0.16);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-note {
+            text-align: center;
+            margin-top: 11px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        /* =========================
+           MAIN NAVIGATION
+        ========================= */
+
+        .main-header {
+            width: 100%;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .main-header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .header-brand {
+            color: #111827;
+            font-size: 20px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header-nav a {
+            color: #4b5563;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .header-nav a:hover {
+            color: #111827;
+        }
+
+        .header-nav .shop-login-link {
+            background: #111827;
+            color: #ffffff;
+            padding: 9px 14px;
+            border-radius: 8px;
+        }
+
+        .header-nav .shop-login-link:hover {
+            background: #1f2937;
+            color: #ffffff;
+        }
+
+        .existing-request-link {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.existing-request-link a {
+    color: #2563eb;
+    font-weight: 700;
+    text-decoration: none;
+    margin-left: 4px;
+}
+
+.existing-request-link a:hover {
+    text-decoration: underline;
+}
+/* =========================
+   MANAGEMENT LOGIN
+========================= */
+
+.management-access {
+    width: 100%;
+    text-align: center;
+    margin-top: 24px;
+    padding: 12px 0 30px;
+}
+
+.management-access a {
+    display: inline-block;
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 8px 12px;
+}
+
+.management-access a:hover {
+    color: #111827;
+    text-decoration: underline;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .page-wrapper {
+        width: 94%;
+        margin: 25px auto 45px;
+    }
+
+    .header {
+        margin-bottom: 24px;
+    }
+
+    .header h1 {
+        font-size: 31px;
+    }
+
+    .header p {
+        font-size: 14px;
+    }
+
+    .form-card {
+        padding: 24px 18px;
+        border-radius: 16px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .form-group.full-width {
+        grid-column: auto;
+    }
+
+    .section-heading {
+        align-items: flex-start;
+    }
+
+    .section-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 18px;
+    }
+
+    .section-heading h2 {
+        font-size: 18px;
+    }
+
+    input,
+    textarea,
+    select {
+        font-size: 16px;
+    }
+
+    .submit-btn {
+        padding: 15px;
+    }
+
+    .main-header-inner {
+        padding: 12px 15px;
+        gap: 12px;
+    }
+
+    .header-brand {
+        font-size: 18px;
+    }
+
+    .header-nav {
+        gap: 8px;
+    }
+
+    .header-nav a {
+        display: none;
+    }
+
+    .header-nav .shop-login-link {
+        display: inline-flex;
+        padding: 9px 13px;
+        font-size: 13px;
+    }
+
+}
+
+</style>
+       
 </head>
+
 
 <body>
 
+    <!-- =========================
+         MAIN NAVIGATION
+    ========================= -->
 
-<div class="page-wrapper">
+    {% if not source_shop %}
 
-    <div class="header">
+        <header class="main-header">
 
-        <div class="header-badge">
-            SpareQuote
+            <div class="main-header-inner">
+
+                <a href="{% url 'request_part' %}" class="header-brand">
+                    SpareQuote
+                </a>
+
+                <nav class="header-nav">
+
+                    <a href="{% url 'request_part' %}">
+                        Request a Part
+                    </a>
+
+                    <a href="{% url 'track_request' %}">
+                        Track Request
+                    </a>
+
+                    <a href="{% url 'shop_login' %}" class="shop-login-link">
+                        Shop Login
+                    </a>
+
+                </nav>
+
+            </div>
+
+        </header>
+
+    {% endif %}
+
+
+    <div class="page-wrapper">
+
+        <!-- =========================
+             PAGE HEADER
+        ========================= -->
+
+        <div class="header">
+
+            <div class="header-badge">
+                SpareQuote
+            </div>
+
+            {% if source_shop %}
+
+                <h1>
+                    Request a Part from {{ source_shop.shop_name }}
+                </h1>
+
+                <p>
+                    Send your spare-part request directly to
+                    {{ source_shop.shop_name }} for a quotation.
+                </p>
+
+            {% else %}
+
+                <h1>
+                    Find Your Spare Part
+                </h1>
+
+                <p>
+                    Tell us what part you need once.
+                    Local spare-parts shops can review your request
+                    and send you quotes.
+                </p>
+
+            {% endif %}
+
         </div>
 
-       {% if source_shop %}
 
-    <h1>Request a Part from {{ source_shop.shop_name }}</h1>
+        <!-- =========================
+             FORM CARD
+        ========================= -->
 
-    <p>
-        Send your spare-part request directly to
-        {{ source_shop.shop_name }} for a quotation.
-    </p>
+        <div class="form-card">
 
-{% else %}
+            <form method="POST" enctype="multipart/form-data">
 
-    <h1>Find Your Spare Part</h1>
-
-    <p>
-        Tell us what part you need once.
-        Local spare-parts shops can review your request
-        and send you quotes.
-    </p>
-
-{% endif %}
-
-    </div>
+                {% csrf_token %}
 
 
-    <div class="form-card">
+                <!-- =========================
+                     CUSTOMER DETAILS
+                ========================= -->
 
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
+                <div class="form-section">
 
+                    <div class="section-heading">
 
-            <!-- CUSTOMER DETAILS -->
+                        <div class="section-icon">
+                            👤
+                        </div>
 
-            <div class="form-section">
-
-                <div class="section-heading">
-
-                    <div class="section-icon">
-                        👤
-                    </div>
-
-                    <div>
-                        <h2>Customer Details</h2>
-                        <p>Tell the shop where and how to reach you.</p>
-                    </div>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-
-                        <label for="{{ form.customer_name.id_for_label }}">
-                            Your Name
-                        </label>
-
-                        {{ form.customer_name.errors }}
-                        {{ form.customer_name }}
+                        <div>
+                            <h2>Customer Details</h2>
+                            <p>
+                                Tell the shop where and how to reach you.
+                            </p>
+                        </div>
 
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="form-grid">
 
-                        <label for="{{ form.phone_number.id_for_label }}">
-                            Phone Number
-                        </label>
+                        <div class="form-group">
 
-                        {{ form.phone_number.errors }}
-                        {{ form.phone_number }}
+                            <label for="{{ form.customer_name.id_for_label }}">
+                                Your Name
+                            </label>
 
-                    </div>
+                            {{ form.customer_name.errors }}
+                            {{ form.customer_name }}
+
+                        </div>
 
 
-                    <div class="form-group full-width">
+                        <div class="form-group">
 
-                        <label for="{{ form.location.id_for_label }}">
-                            Your Location
-                        </label>
+                            <label for="{{ form.phone_number.id_for_label }}">
+                                Phone Number
+                            </label>
 
-                        {{ form.location.errors }}
-                        {{ form.location }}
+                            {{ form.phone_number.errors }}
+                            {{ form.phone_number }}
 
-                        <span class="help-text">
-                            Example: Randburg, Sandton or Pretoria.
-                        </span>
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="{{ form.location.id_for_label }}">
+                                Your Location
+                            </label>
+
+                            {{ form.location.errors }}
+                            {{ form.location }}
+
+                            <span class="help-text">
+                                Example: Randburg, Sandton or Pretoria.
+                            </span>
+
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
 
+                <!-- =========================
+                     VEHICLE DETAILS
+                ========================= -->
 
-            <!-- VEHICLE DETAILS -->
+                <div class="form-section">
 
-            <div class="form-section">
+                    <div class="section-heading">
 
-                <div class="section-heading">
+                        <div class="section-icon">
+                            🚗
+                        </div>
 
-                    <div class="section-icon">
-                        🚗
-                    </div>
-
-                    <div>
-                        <h2>Vehicle Details</h2>
-                        <p>Help the shop identify the correct part for your vehicle.</p>
-                    </div>
-
-                </div>
-
-
-                <div class="form-grid">
-
-                    <div class="form-group">
-
-                        <label for="{{ form.vehicle_make.id_for_label }}">
-                            Vehicle Make
-                        </label>
-
-                        {{ form.vehicle_make.errors }}
-                        {{ form.vehicle_make }}
+                        <div>
+                            <h2>Vehicle Details</h2>
+                            <p>
+                                Help the shop identify the correct part for your vehicle.
+                            </p>
+                        </div>
 
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="form-grid">
 
-                        <label for="{{ form.vehicle_model.id_for_label }}">
-                            Vehicle Model
-                        </label>
+                        <div class="form-group">
 
-                        {{ form.vehicle_model.errors }}
-                        {{ form.vehicle_model }}
+                            <label for="{{ form.vehicle_make.id_for_label }}">
+                                Vehicle Make
+                            </label>
 
-                    </div>
+                            {{ form.vehicle_make.errors }}
+                            {{ form.vehicle_make }}
 
-
-                    <div class="form-group">
-
-                        <label for="{{ form.vehicle_year.id_for_label }}">
-                            Vehicle Year
-                        </label>
-
-                        {{ form.vehicle_year.errors }}
-                        {{ form.vehicle_year }}
-
-                    </div>
+                        </div>
 
 
-                    <div class="form-group">
+                        <div class="form-group">
 
-                        <label for="{{ form.engine_details.id_for_label }}">
-                            Engine Details
-                        </label>
+                            <label for="{{ form.vehicle_model.id_for_label }}">
+                                Vehicle Model
+                            </label>
 
-                        {{ form.engine_details.errors }}
-                        {{ form.engine_details }}
+                            {{ form.vehicle_model.errors }}
+                            {{ form.vehicle_model }}
 
-                        <span class="help-text">
-                            Example: 1.6 petrol, 2.0 TDI or 320d diesel.
-                        </span>
-
-                    </div>
+                        </div>
 
 
-                    <div class="form-group full-width">
+                        <div class="form-group">
 
-                        <label for="{{ form.vin_number.id_for_label }}">
-                            VIN Number
-                        </label>
+                            <label for="{{ form.vehicle_year.id_for_label }}">
+                                Vehicle Year
+                            </label>
 
-                        {{ form.vin_number.errors }}
-                        {{ form.vin_number }}
+                            {{ form.vehicle_year.errors }}
+                            {{ form.vehicle_year }}
 
-                        <span class="help-text">
-                            Optional. A VIN is usually a 17-character vehicle identification number.
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
+                        </div>
 
 
-            <!-- PART DETAILS -->
+                        <div class="form-group">
 
-            <div class="form-section">
+                            <label for="{{ form.engine_details.id_for_label }}">
+                                Engine Details
+                            </label>
 
-                <div class="section-heading">
+                            {{ form.engine_details.errors }}
+                            {{ form.engine_details }}
 
-                    <div class="section-icon">
-                        🔧
-                    </div>
+                            <span class="help-text">
+                                Example: 1.6 petrol, 2.0 TDI or 320d diesel.
+                            </span>
 
-                    <div>
-                        <h2>Part Details</h2>
-                        <p>Describe the spare part you are looking for.</p>
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="{{ form.vin_number.id_for_label }}">
+                                VIN Number
+                            </label>
+
+                            {{ form.vin_number.errors }}
+                            {{ form.vin_number }}
+
+                            <span class="help-text">
+                                Optional. A VIN is usually a 17-character
+                                vehicle identification number.
+                            </span>
+
+                        </div>
+
                     </div>
 
                 </div>
 
 
-                <div class="form-grid">
+                <!-- =========================
+                     PART DETAILS
+                ========================= -->
 
-                    <div class="form-group full-width">
+                <div class="form-section">
 
-                        <label for="{{ form.part_name.id_for_label }}">
-                            Part Needed
-                        </label>
+                    <div class="section-heading">
 
-                        {{ form.part_name.errors }}
-                        {{ form.part_name }}
+                        <div class="section-icon">
+                            🔧
+                        </div>
 
-                        <span class="help-text">
-                            Example: Front brake pads, alternator, clutch kit or headlight.
-                        </span>
-
-                    </div>
-
-
-                    <div class="form-group full-width">
-
-                        <label for="{{ form.part_description.id_for_label }}">
-                            Description
-                        </label>
-
-                        {{ form.part_description.errors }}
-                        {{ form.part_description }}
-
-                        <span class="help-text">
-                            Add any details that may help the shop identify the correct part.
-                        </span>
+                        <div>
+                            <h2>Part Details</h2>
+                            <p>
+                                Describe the spare part you are looking for.
+                            </p>
+                        </div>
 
                     </div>
 
 
-                    <div class="form-group full-width">
+                    <div class="form-grid">
 
-                        <label for="{{ form.part_image.id_for_label }}">
-                            Upload a Photo
-                        </label>
+                        <div class="form-group full-width">
 
-                        {{ form.part_image.errors }}
-                        {{ form.part_image }}
+                            <label for="{{ form.part_name.id_for_label }}">
+                                Part Needed
+                            </label>
 
-                        <span class="help-text">
-                            Optional, but a photo can help shops identify the part faster.
-                        </span>
+                            {{ form.part_name.errors }}
+                            {{ form.part_name }}
+
+                            <span class="help-text">
+                                Example: Front brake pads, alternator,
+                                clutch kit or headlight.
+                            </span>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="{{ form.part_description.id_for_label }}">
+                                Description
+                            </label>
+
+                            {{ form.part_description.errors }}
+                            {{ form.part_description }}
+
+                            <span class="help-text">
+                                Add any details that may help the shop
+                                identify the correct part.
+                            </span>
+
+                        </div>
+
+
+                        <div class="form-group full-width">
+
+                            <label for="{{ form.part_image.id_for_label }}">
+                                Upload a Photo
+                            </label>
+
+                            {{ form.part_image.errors }}
+                            {{ form.part_image }}
+
+                            <span class="help-text">
+                                Optional, but a photo can help shops
+                                identify the part faster.
+                            </span>
+
+                        </div>
 
                     </div>
 
                 </div>
 
-            </div>
 
+                <!-- =========================
+                     SUBMIT
+                ========================= -->
 
-            <!-- SUBMIT -->
+                <div class="submit-area">
 
-            <div class="submit-area">
-
-               {% if source_shop %}
+                    {% if source_shop %}
 
     <button class="submit-btn" type="submit">
         Request Quote from {{ source_shop.shop_name }}
     </button>
 
     <p class="submit-note">
-        Your request will only be sent to {{ source_shop.shop_name }}.
+        Your request will only be sent to
+        {{ source_shop.shop_name }}.
     </p>
 
-{% else %}
+    <div class="existing-request-link">
+        Already requested a part?
 
-    <button class="submit-btn" type="submit">
-        Request Quotes
-    </button>
+        <a href="{% url 'track_request' %}">
+            Track Existing Request
+        </a>
+    </div>
 
-    <p class="submit-note">
-        Your request will be shared with participating spare-parts shops.
-    </p>
 
-{% endif %}
+                    {% else %}
 
-            </div>
+                        <button class="submit-btn" type="submit">
+                            Request Quotes
+                        </button>
 
-        </form>
+                        <p class="submit-note">
+                            Your request will be shared with participating
+                            spare-parts shops.
+                        </p>
+
+                    {% endif %}
+
+                </div>
+
+                  </form>
 
     </div>
 
 </div>
 
-
+<div class="management-access">
+    <a href="{% url 'admin_dashboard' %}">
+        Management Login
+    </a>
+</div>
 
 </body>
 </html>

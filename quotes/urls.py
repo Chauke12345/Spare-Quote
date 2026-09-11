@@ -155,4 +155,10 @@ urlpatterns = [
         name='private_shop_qr'
     ),
 
+    path(
+    'request-done/',
+    views.request_done,
+    name='request_done'
+),
+
 ]

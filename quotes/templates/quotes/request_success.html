@@ -247,6 +247,16 @@
             background: #f3f4f6;
         }
 
+        .btn-done {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.btn-done:hover {
+    background: #e5e7eb;
+}
+
         /* =========================
            FOOT NOTE
         ========================= */
@@ -466,7 +476,6 @@
 
     </div>
 
-
     <!-- ACTIONS -->
 
     <div class="actions">
@@ -475,9 +484,8 @@
             class="btn btn-primary"
             href="{% url 'request_detail' part_request.public_id %}"
         >
-            View My Request
+            View / Track My Request
         </a>
-
 
         {% if part_request.request_source == 'shop_qr' and part_request.source_shop %}
 
@@ -499,22 +507,22 @@
 
         {% endif %}
 
+        <a
+    class="btn btn-done"
+    href="{% url 'request_done' %}"
+>
+    Done
+</a>
+
     </div>
-
-
-    <p class="foot-note">
-        Keep your request page available so you can return and check for new quotations.
-    </p>
+    <!-- End actions -->
 
 </div>
-
-
+<!-- End success-card -->
 
 </div>
-
+<!-- End page-wrapper -->
 
 
 </body>
-
-
 </html>
