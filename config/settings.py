@@ -10,13 +10,25 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+"""
+Django settings for config project.
+"""
+
 from pathlib import Path
 import os
 import dj_database_url
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+# =========================================================
+# BASE DIRECTORY
+# =========================================================
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+# =========================================================
+# SECURITY
+# =========================================================
 
 SECRET_KEY = os.environ.get(
     'SECRET_KEY',
@@ -41,7 +53,10 @@ CSRF_TRUSTED_ORIGINS = [
     'https://web-production-96ad4a.up.railway.app',
 ]
 
-# Application definition
+
+# =========================================================
+# APPLICATIONS
+# =========================================================
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -50,8 +65,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'quotes',
 ]
+
+
+# =========================================================
+# MIDDLEWARE
+# =========================================================
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -64,13 +85,23 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
+# =========================================================
+# URLS / TEMPLATES
+# =========================================================
+
 ROOT_URLCONF = 'config.urls'
+
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+
         'DIRS': [],
+
         'APP_DIRS': True,
+
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.request',
@@ -81,11 +112,13 @@ TEMPLATES = [
     },
 ]
 
+
 WSGI_APPLICATION = 'config.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/6.1/ref/settings/#databases
+# =========================================================
+# DATABASE
+# =========================================================
 
 DATABASES = {
     'default': dj_database_url.config(
@@ -95,27 +128,33 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/6.1/ref/settings/#auth-password-validators
+# =========================================================
+# PASSWORD VALIDATION
+# =========================================================
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.1/topics/i18n/
+# =========================================================
+# INTERNATIONALIZATION
+# =========================================================
 
 LANGUAGE_CODE = 'en-us'
 
@@ -126,34 +165,70 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.1/howto/static-files/
+# =========================================================
+# STATIC FILES
+# =========================================================
 
 STATIC_URL = '/static/'
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND":
+        "django.core.files.storage.FileSystemStorage",
     },
+
     "staticfiles": {
-        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        "BACKEND":
+        "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
+
+# =========================================================
+# MEDIA FILES
+# =========================================================
+
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
 
-# Email
-# https://docs.djangoproject.com/en/6.1/topics/email/#topic-email-configuration
+MEDIA_ROOT = Path(
+    os.environ.get(
+        'RAILWAY_VOLUME_MOUNT_PATH',
+        BASE_DIR / 'media'
+    )
+)
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# =========================================================
+# EMAIL
+# =========================================================
+
+EMAIL_BACKEND = (
+    'django.core.mail.backends.console.EmailBackend'
+)
+
+
+# =========================================================
+# PRODUCTION SECURITY
+# =========================================================
 
 if not DEBUG:
+
+    SECURE_PROXY_SSL_HEADER = (
+        'HTTP_X_FORWARDED_PROTO',
+        'https'
+    )
+
     SECURE_SSL_REDIRECT = True
+
     SESSION_COOKIE_SECURE = True
+
     CSRF_COOKIE_SECURE = True
 
     SECURE_HSTS_SECONDS = 31536000
+
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
     SECURE_HSTS_PRELOAD = True

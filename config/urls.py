@@ -15,17 +15,53 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
-from django.conf.urls.static import static
+from django.views.static import serve
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('quotes.urls')),
+
+    # Django Admin
+    path(
+        'admin/',
+        admin.site.urls
+    ),
+
+    # SpareQuote
+    path(
+        '',
+        include('quotes.urls')
+    ),
+
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(
-        settings.MEDIA_URL,
-        document_root=settings.MEDIA_ROOT
-    )
+
+# =========================================================
+# MEDIA FILES
+# =========================================================
+#
+# Customer uploaded part images.
+# Files are stored in:
+#
+# Local:
+#   /media/
+#
+# Railway:
+#   persistent Railway Volume
+#
+# This allows uploaded images to be displayed even when
+# DEBUG=False.
+# =========================================================
+
+urlpatterns += [
+
+    re_path(
+        r'^media/(?P<path>.*)$',
+        serve,
+        {
+            'document_root': settings.MEDIA_ROOT
+        }
+    ),
+
+]
