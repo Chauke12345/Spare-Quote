@@ -1,20 +1,31 @@
-<!DOCTYPE html>
+{% load static %}
 
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
->
+    <title>SpareQuote | Shop Login</title>
 
-<title>Shop Login | SpareQuote</title>
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'quotes/images/sparequote-icon.svg' %}"
+    >
 
-<style>
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'quotes/images/sparequote-icon.svg' %}"
+    >
 
+    <style>
     * {
         box-sizing: border-box;
         margin: 0;
@@ -392,7 +403,7 @@
     }
 
 </style>
-```
+
 
 </head>
 
@@ -400,7 +411,7 @@
 
 <div class="page-wrapper">
 
-```
+
 <div class="login-wrapper">
 
 
@@ -470,7 +481,7 @@
 
         {% endif %}
 
-        <!-- =========================
+<!-- =========================
      DJANGO MESSAGES
 ========================== -->
 
@@ -496,7 +507,7 @@
 
 
 
-      <!-- =========================
+<!-- =========================
      LOGIN FORM
 ========================== -->
 

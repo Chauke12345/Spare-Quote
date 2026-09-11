@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -10,7 +12,18 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Track My Requests | SpareQuote</title>
+    <title>Track Request | SpareQuote</title>
+
+    <link
+        rel="icon"
+        type="image/svg+xml"
+        href="{% static 'quotes/images/sparequote-icon.svg' %}"
+    >
+
+    <link
+        rel="apple-touch-icon"
+        href="{% static 'quotes/images/sparequote-icon.svg' %}"
+    >
 
     <style>
 
