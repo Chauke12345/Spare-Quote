@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 Django settings for config project.
 """
+"""
+Django settings for config project.
+"""
 
 from pathlib import Path
 import os
@@ -37,23 +40,27 @@ SECRET_KEY = os.environ.get(
 
 DEBUG = os.environ.get(
     'DEBUG',
-    'True'
+    'False'
 ).lower() == 'true'
+
+
+# Prevent production from running with the fallback key
+if not DEBUG and SECRET_KEY == 'django-insecure-local-development-key':
+    raise RuntimeError(
+        'SECRET_KEY must be set in production.'
+    )
 
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'web-production-96ad4a.up.railway.app',
-    '.railway.app',
 ]
 
 
 CSRF_TRUSTED_ORIGINS = [
     'https://web-production-96ad4a.up.railway.app',
 ]
-
-
 # =========================================================
 # APPLICATIONS
 # =========================================================
@@ -175,14 +182,14 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 
 STORAGES = {
-    "default": {
-        "BACKEND":
-        "django.core.files.storage.FileSystemStorage",
+    'default': {
+        'BACKEND':
+        'django.core.files.storage.FileSystemStorage',
     },
 
-    "staticfiles": {
-        "BACKEND":
-        "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    'staticfiles': {
+        'BACKEND':
+        'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }
 
@@ -224,11 +231,14 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
 
     SESSION_COOKIE_SECURE = True
+    SESSION_COOKIE_HTTPONLY = True
 
     CSRF_COOKIE_SECURE = True
 
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+
+    X_FRAME_OPTIONS = 'DENY'
+
     SECURE_HSTS_SECONDS = 31536000
-
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
     SECURE_HSTS_PRELOAD = True
