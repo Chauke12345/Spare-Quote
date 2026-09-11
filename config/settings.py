@@ -28,11 +28,18 @@ DEBUG = os.environ.get(
     'True'
 ).lower() == 'true'
 
+
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
+    'web-production-96ad4a.up.railway.app',
+    '.railway.app',
 ]
 
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://web-production-96ad4a.up.railway.app',
+]
 
 # Application definition
 
