@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
 
-```
+
 <meta
     name="viewport"
     content="width=device-width, initial-scale=1.0"
@@ -496,123 +496,89 @@
 
 
 
-        <!-- =========================
-             LOGIN FORM
-        ========================== -->
+      <!-- =========================
+     LOGIN FORM
+========================== -->
 
-        <form method="POST">
+<form method="POST">
 
-            {% csrf_token %}
+    {% csrf_token %}
 
+    <div class="form-group">
 
+        <label for="username">
+            Username
+        </label>
 
-            <div class="form-group">
-
-                <label for="username">
-                    Username
-                </label>
-
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Enter your username"
-                    autocomplete="username"
-                    required
-                >
-
-            </div>
-
-
-
-            <div class="form-group">
-
-                <label for="password">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter your password"
-                    autocomplete="current-password"
-                    required
-                >
-
-            </div>
-
-
-
-            <button
-                type="submit"
-                class="login-btn"
-            >
-                Login to Dashboard
-            </button>
-
-
-        </form>
-
-
-
-        <!-- =========================
-             REGISTER SHOP
-        ========================== -->
-
-        <div class="account-divider">
-            New to SpareQuote?
-        </div>
-
-
-        <div class="register-box">
-
-            <p class="register-text">
-                Create a shop account to start receiving
-                spare-part requests from customers.
-            </p>
-
-
-            <a
-                href="{% url 'shop_register' %}"
-                class="register-link"
-            >
-                Register Your Shop
-            </a>
-
-        </div>
-
-
-
-        <!-- =========================
-             BACK
-        ========================== -->
-
-        <div class="back-area">
-
-            <a
-                href="{% url 'request_part' %}"
-                class="back-link"
-            >
-                ← Back to Customer Request
-            </a>
-
-        </div>
-
-
-        <p class="security-note">
-            Shop accounts are protected by secure sign-in.
-        </p>
-
+        <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Enter your username"
+            autocomplete="username"
+            required
+        >
 
     </div>
 
 
-</div>
-```
+    <div class="form-group">
+
+        <label for="password">
+            Password
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required
+        >
+
+    </div>
+
+
+    <button
+        type="submit"
+        class="login-btn"
+    >
+        Login to Dashboard
+    </button>
+
+</form>
+
+
+<!-- =========================
+     BACK
+========================== -->
+
+<div class="back-area">
+
+    <a
+        href="{% url 'request_part' %}"
+        class="back-link"
+    >
+        ← Back to Customer Request
+    </a>
 
 </div>
+
+
+<p class="security-note">
+    Shop accounts are protected by secure sign-in.
+</p>
+
+
+</div>
+<!-- End login-card -->
+
+</div>
+<!-- End login-wrapper -->
+
+</div>
+<!-- End page-wrapper -->
 
 </body>
-
 </html>

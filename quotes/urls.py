@@ -57,64 +57,57 @@ urlpatterns = [
     ),
 
 
-    # =====================================================
-    # SHOP
-    # =====================================================
+   # =====================================================
+# SHOP
+# =====================================================
 
-    path(
-        'shop/register/',
-        views.shop_register,
-        name='shop_register'
-    ),
+path(
+    'shop/login/',
+    views.shop_login,
+    name='shop_login'
+),
 
-    path(
-        'shop/login/',
-        views.shop_login,
-        name='shop_login'
-    ),
+path(
+    'shop/logout/',
+    views.shop_logout,
+    name='shop_logout'
+),
 
-    path(
-        'shop/logout/',
-        views.shop_logout,
-        name='shop_logout'
-    ),
+path(
+    'shop/dashboard/',
+    views.shop_dashboard,
+    name='shop_dashboard'
+),
 
-    path(
-        'shop/dashboard/',
-        views.shop_dashboard,
-        name='shop_dashboard'
-    ),
+path(
+    'shop/reviews/',
+    views.shop_reviews,
+    name='shop_reviews'
+),
 
-    path(
-        'shop/reviews/',
-        views.shop_reviews,
-        name='shop_reviews'
-    ),
+path(
+    'shop/request/<int:request_id>/quote/',
+    views.submit_quote,
+    name='submit_quote'
+),
 
-    path(
-        'shop/request/<int:request_id>/quote/',
-        views.submit_quote,
-        name='submit_quote'
-    ),
+path(
+    'shop/request/<int:request_id>/complete/',
+    views.mark_completed,
+    name='mark_completed'
+),
 
-    path(
-        'shop/request/<int:request_id>/complete/',
-        views.mark_completed,
-        name='mark_completed'
-    ),
+path(
+    'shop/notification/<int:notification_id>/read/',
+    views.mark_notification_read,
+    name='mark_notification_read'
+),
 
-    path(
-        'shop/notification/<int:notification_id>/read/',
-        views.mark_notification_read,
-        name='mark_notification_read'
-    ),
-
-    path(
-        'shop/support/',
-        views.shop_support,
-        name='shop_support'
-    ),
-
+path(
+    'shop/support/',
+    views.shop_support,
+    name='shop_support'
+),
 
     # =====================================================
     # ADMIN
