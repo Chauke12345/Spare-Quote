@@ -8,210 +8,552 @@
     <title>SpareQuote Admin Dashboard</title>
 
     <style>
+        /* =========================================================
+   PAGE HEADER
+========================================================= */
 
-        * {
-            box-sizing: border-box;
-        }
+body {
+    margin: 0;
+    background: #f6f7fb;
+    color: #111827;
+    font-family: Arial, sans-serif;
+}
 
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #222;
-        }
-
-/* =========================
-   COMPACT ADMIN LAYOUT
-========================= */
-
-.container {
-    width: 90%;
-    max-width: 1050px;
-    margin: 25px auto;
+.dashboard-container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 28px 24px 40px;
+    box-sizing: border-box;
 }
 
 .page-header {
-    margin-bottom: 25px;
-}
-
-.page-header h1 {
-    margin: 0 0 6px;
-    font-size: 26px;
-}
-
-.subtitle {
-    font-size: 14px;
-}
-
-.section {
     margin-bottom: 28px;
 }
 
-.section-title {
-    margin: 0 0 12px;
-    font-size: 18px;
+.page-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
 }
+
+.subtitle {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section {
+    margin-bottom: 32px;
+}
+
+.section-title {
+    margin: 0 0 14px;
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+
+/* =========================================================
+   STATS GRID
+========================================================= */
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 12px;
+    gap: 16px;
 }
 
 .stat-card {
     background: #ffffff;
-    padding: 16px 18px;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
 }
 
 .stat-card h3 {
-    margin: 0 0 8px;
+    margin: 0 0 10px;
+    color: #6b7280;
     font-size: 13px;
-    font-weight: 600;
-    color: #666;
+    font-weight: 700;
 }
 
 .stat-card strong {
     display: block;
-    font-size: 25px;
-    line-height: 1;
+    color: #111827;
+    font-size: 28px;
+    font-weight: 800;
 }
 
-        /* =========================
-           HEADER
-        ========================= */
 
-        .page-header {
-            margin-bottom: 35px;
-        }
-
-        .page-header h1 {
-            margin: 0 0 10px;
-            font-size: 32px;
-        }
-
-        .subtitle {
-            margin: 0;
-            color: #666;
-            font-size: 16px;
-        }
-
-        /* =========================
-           SECTION
-        ========================= */
-
-        .section {
-            margin-bottom: 40px;
-        }
-
-        .section-title {
-            margin: 0 0 18px;
-            font-size: 21px;
-        }
-
-        /* =========================
-           STAT CARDS
-        ========================= */
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 20px;
-        }
-
-        .stat-card {
-            background: #ffffff;
-            padding: 24px;
-            border-radius: 14px;
-            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
-        }
-
-        .stat-card h3 {
-            margin: 0 0 12px;
-            font-size: 15px;
-            font-weight: 600;
-            color: #666;
-        }
-
-        .stat-card strong {
-            display: block;
-            font-size: 32px;
-            line-height: 1;
-        }
-/* =========================
+/* =========================================================
    RESPONSIVE
-========================= */
+========================================================= */
 
-@media (max-width: 900px) {
-
+@media (max-width: 1000px) {
     .stats-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-
 }
 
-@media (max-width: 500px) {
-
-    .container {
-        width: 94%;
-        margin: 25px auto;
+@media (max-width: 600px) {
+    .dashboard-container {
+        padding: 20px 14px 30px;
     }
 
     .page-header h1 {
-        font-size: 26px;
+        font-size: 23px;
     }
 
     .stats-grid {
         grid-template-columns: 1fr;
     }
+}
 
+/* =========================================================
+   SUPPORT TICKETS
+========================================================= */
+
+.support-section {
+    margin-bottom: 40px;
+}
+
+.support-section .section-header {
+    margin-bottom: 14px;
+}
+
+.support-section .section-header h2 {
+    margin: 0 0 6px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.support-section .section-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
 }
 
 
-/* =========================
-   ADMIN ACCESS CONTROLS
-========================= */
+/* =========================================================
+   SUPPORT CARD
+========================================================= */
 
-.access-btn {
-    border: none;
+.support-card {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    overflow-x: auto;
+    box-sizing: border-box;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+
+/* =========================================================
+   SUPPORT TABLE
+========================================================= */
+
+.support-table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.support-table thead {
+    background: #f8fafc;
+}
+
+.support-table th {
+    padding: 13px 14px;
+    text-align: left;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid #e5e7eb;
+    white-space: nowrap;
+}
+
+.support-table td {
+    padding: 14px;
+    vertical-align: top;
+    color: #374151;
+    line-height: 1.45;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.support-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.support-table tbody tr:hover {
+    background: #fafafa;
+}
+
+
+/* =========================================================
+   TICKET INFORMATION
+========================================================= */
+
+.ticket-number {
+    color: #2563eb;
+    font-weight: 800;
+}
+
+.ticket-shop {
+    color: #111827;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.ticket-subject {
+    color: #111827;
+    font-weight: 700;
+}
+
+.ticket-message {
+    max-width: 280px;
+    color: #64748b;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   TICKET STATUS
+========================================================= */
+
+.ticket-status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px 9px;
     border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+    white-space: nowrap;
+}
 
-    padding: 5px 10px;
+.ticket-status-open {
+    background: #fef2f2;
+    color: #b91c1c;
+}
 
+.ticket-status-in_progress {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.ticket-status-resolved {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+
+/* =========================================================
+   TICKET ACTIONS
+========================================================= */
+
+.ticket-actions {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+}
+
+.ticket-actions form {
+    margin: 0;
+    padding: 0;
+}
+
+.ticket-btn {
+    border: none;
+    border-radius: 7px;
+    padding: 7px 10px;
     font-size: 11px;
     font-weight: 700;
-
     cursor: pointer;
-
-    min-width: 72px;
-
-    line-height: 1.2;
-
+    white-space: nowrap;
     transition:
         transform 0.2s ease,
-        box-shadow 0.2s ease;
+        background 0.2s ease;
+}
+
+.ticket-btn:hover {
+    transform: translateY(-1px);
+}
+
+.ticket-progress {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.ticket-progress:hover {
+    background: #ffedd5;
+}
+
+.ticket-resolved {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.ticket-resolved:hover {
+    background: #d1fae5;
+}
+
+.ticket-done {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    background: #ecfdf5;
+    color: #047857;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+
+/* =========================================================
+   SEND NOTIFICATION SECTION
+========================================================= */
+
+.notification-admin-card {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 20px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+}
+
+.notification-form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.notification-admin-card .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.notification-admin-card .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.notification-admin-card .form-group label {
+    display: block;
+    margin: 0;
+    color: #374151;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.notification-admin-card .form-group input,
+.notification-admin-card .form-group select,
+.notification-admin-card .form-group textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    outline: none;
+    background: #ffffff;
+    color: #111827;
+    font-size: 13px;
+    font-family: inherit;
+}
+
+.notification-admin-card .form-group input:focus,
+.notification-admin-card .form-group select:focus,
+.notification-admin-card .form-group textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
+}
+
+.notification-admin-card .form-group textarea {
+    min-height: 95px;
+    resize: vertical;
+}
+
+.notification-actions {
+    display: flex;
+    align-items: center;
+    margin-top: 16px;
+}
+
+.send-notification-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    background: #4f46e5;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.send-notification-btn:hover {
+    background: #4338ca;
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   ADMIN MESSAGES
+========================================================= */
+
+.admin-message {
+    margin-bottom: 16px;
+    padding: 11px 13px;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    background: #f0fdf4;
+    color: #166534;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SHOPS MANAGEMENT ACCESS BUTTONS
+========================================================= */
+
+.access-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 74px;
+    border: none;
+    border-radius: 7px;
+    padding: 7px 11px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: inherit;
+    cursor: pointer;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
 .access-btn:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
-
-
-/* ACTIVE / ENABLED */
 
 .access-btn.on {
-    background: #dcfce7;
-    color: #166534;
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.access-btn.on:hover {
+    background: #d1fae5;
+}
+
+.access-btn.off {
+    background: #fef2f2;
+    color: #b91c1c;
+}
+
+.access-btn.off:hover {
+    background: #fee2e2;
 }
 
 
-/* INACTIVE / DISABLED */
+/* =========================================================
+   SECTION HEADER
+========================================================= */
 
-.access-btn.off {
-    background: #fee2e2;
-    color: #991b1b;
+.section-header {
+    margin-bottom: 14px;
+}
+
+.section-header h2,
+.section-header .section-title {
+    margin: 0 0 6px;
+}
+
+.section-subtitle {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .notification-form-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .notification-admin-card .form-group.full-width {
+        grid-column: 1 / -1;
+    }
+}
+
+
+@media (max-width: 900px) {
+
+    .support-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .notification-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .notification-admin-card .form-group.full-width {
+        grid-column: auto;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .notification-admin-card {
+        padding: 15px;
+        border-radius: 12px;
+    }
+
+    .support-section .section-header h2 {
+        font-size: 18px;
+    }
+
+    .send-notification-btn {
+        width: 100%;
+    }
+
+    .notification-actions {
+        width: 100%;
+    }
 }
 
 </style>
@@ -219,228 +561,62 @@
 </head>
 
 <body>
-    
 
-        <!-- =========================
-             HEADER
-        ========================== -->
+<div class="dashboard-container">
 
-        <div class="page-header">
+    <!-- =========================
+         HEADER
+    ========================== -->
 
-            <h1>
-                SpareQuote Admin Dashboard
-            </h1>
+    <div class="page-header">
+        <h1>SpareQuote Admin Dashboard</h1>
 
-            <p class="subtitle">
-                Monitor shops, customer requests, quotations and completed orders.
-            </p>
+        <p class="subtitle">
+            Monitor shops, customer requests, quotations and completed orders.
+        </p>
+    </div>
+
+
+    <!-- =========================
+         PLATFORM OVERVIEW
+    ========================== -->
+
+    <section class="section">
+
+        <h2 class="section-title">
+            Platform Overview
+        </h2>
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+                <h3>Total Shops</h3>
+                <strong>{{ total_shops }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <h3>Active Shops</h3>
+                <strong>{{ active_shops }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <h3>Total Requests</h3>
+                <strong>{{ total_requests }}</strong>
+            </div>
+
+            <div class="stat-card">
+                <h3>Open Requests</h3>
+                <strong>{{ open_requests }}</strong>
+            </div>
 
         </div>
 
-
-        <!-- =========================
-             PLATFORM OVERVIEW
-        ========================== -->
-
-        <section class="section">
-
-            <h2 class="section-title">
-                Platform Overview
-            </h2>
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <h3>
-                        Total Shops
-                    </h3>
-
-                    <strong>
-                        {{ total_shops }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Active Shops
-                    </h3>
-
-                    <strong>
-                        {{ active_shops }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Total Requests
-                    </h3>
-
-                    <strong>
-                        {{ total_requests }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Open Requests
-                    </h3>
-
-                    <strong>
-                        {{ open_requests }}
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             SHOP ACCESS
-        ========================== -->
-
-        <section class="section">
-
-            <h2 class="section-title">
-                Shop Access
-            </h2>
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <h3>
-                        Marketplace Shops
-                    </h3>
-
-                    <strong>
-                        {{ marketplace_shops }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Private QR Shops
-                    </h3>
-
-                    <strong>
-                        {{ private_qr_shops }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Total Quotes
-                    </h3>
-
-                    <strong>
-                        {{ total_quotes }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Total Reviews
-                    </h3>
-
-                    <strong>
-                        {{ total_reviews }}
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             REQUEST ACTIVITY
-        ========================== -->
-
-        <section class="section">
-
-            <h2 class="section-title">
-                Request Activity
-            </h2>
-
-            <div class="stats-grid">
-
-                <div class="stat-card">
-
-                    <h3>
-                        Marketplace Requests
-                    </h3>
-
-                    <strong>
-                        {{ marketplace_requests }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Private QR Requests
-                    </h3>
-
-                    <strong>
-                        {{ private_requests }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Accepted Orders
-                    </h3>
-
-                    <strong>
-                        {{ accepted_orders }}
-                    </strong>
-
-                </div>
-
-
-                <div class="stat-card">
-
-                    <h3>
-                        Completed Orders
-                    </h3>
-
-                    <strong>
-                        {{ completed_orders }}
-                    </strong>
-
-                </div>
-
-            </div>
-
-        </section>
-        <section class="section">
+    </section>
+       <!-- =========================
+     RECENT REQUESTS
+========================== -->
+
+<section class="section">
 
     <h2 class="section-title">
         Recent Requests
@@ -453,15 +629,14 @@
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
     ">
 
-       <table style="
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 750px;
-    font-size: 13px;
-">
+        <table style="
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 750px;
+            font-size: 13px;
+        ">
 
             <thead>
-
                 <tr style="background: #f0f1f3;">
 
                     <th style="padding: 15px; text-align: left;">
@@ -493,9 +668,7 @@
                     </th>
 
                 </tr>
-
             </thead>
-
 
             <tbody>
 
@@ -503,42 +676,38 @@
 
                     <tr style="border-top: 1px solid #eee;">
 
-                        <td style="padding: 10px 12px; font-size: 13px;">
+                        <td style="padding: 10px 12px;">
                             #{{ part_request.id }}
                         </td>
 
-                        <td style="padding: 10px 12px; font-size: 13px;">
+                        <td style="padding: 10px 12px;">
                             {{ part_request.vehicle_make }}
                             {{ part_request.vehicle_model }}
                         </td>
 
-                        <td style="padding: 10px 12px; font-size: 13px;">
+                        <td style="padding: 10px 12px;">
                             {{ part_request.part_name }}
                         </td>
 
-                        <td style="padding: 10px 12px; font-size: 13px;">
+                        <td style="padding: 10px 12px;">
                             {{ part_request.get_request_source_display }}
                         </td>
 
-                        <td style="padding: 10px 12px; font-size: 13px;">
+                        <td style="padding: 10px 12px;">
 
                             {% if part_request.source_shop %}
-
                                 {{ part_request.source_shop.shop_name }}
-
                             {% else %}
-
                                 Marketplace
-
                             {% endif %}
 
                         </td>
 
-                        <td style="padding: 15px;">
+                        <td style="padding: 10px 12px;">
                             {{ part_request.get_status_display }}
                         </td>
 
-                        <td style="padding: 15px;">
+                        <td style="padding: 10px 12px;">
                             {{ part_request.created_at|date:"d M Y, H:i" }}
                         </td>
 
@@ -547,14 +716,12 @@
                 {% empty %}
 
                     <tr>
-
                         <td
                             colspan="7"
                             style="padding: 25px; text-align: center;"
                         >
                             No requests yet.
                         </td>
-
                     </tr>
 
                 {% endfor %}
@@ -566,16 +733,226 @@
     </div>
 
 </section>
+<!-- =========================
+     SUPPORT TICKETS
+========================= -->
 
+<section class="section support-section">
+
+    <div class="section-header">
+
+        <h2>
+            🛟 Support Tickets
+        </h2>
+
+        <p>
+            Help requests submitted by SpareQuote shops.
+        </p>
+
+    </div>
+
+
+    {% if support_tickets %}
+
+        <div class="support-card">
+
+            <table class="support-table">
+
+                <thead>
+
+                    <tr>
+                        <th>Ticket</th>
+                        <th>Shop</th>
+                        <th>Category</th>
+                        <th>Subject</th>
+                        <th>Message</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for ticket in support_tickets %}
+
+                        <tr>
+
+                            <td>
+                                <span class="ticket-number">
+                                    #{{ ticket.id }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <span class="ticket-shop">
+                                    {{ ticket.shop.shop_name }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                {{ ticket.get_category_display }}
+                            </td>
+
+
+                            <td>
+                                <span class="ticket-subject">
+                                    {{ ticket.subject }}
+                                </span>
+                            </td>
+
+
+                            <td>
+                                <div class="ticket-message">
+                                    {{ ticket.message }}
+                                </div>
+                            </td>
+
+
+                            <td>
+
+                                <span class="
+                                    ticket-status
+                                    ticket-status-{{ ticket.status }}
+                                ">
+                                    {{ ticket.get_status_display }}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+                                {{ ticket.created_at|date:"d M Y, H:i" }}
+                            </td>
+
+
+                            <td>
+
+                                <div class="ticket-actions">
+
+                                    {% if ticket.status != 'resolved' %}
+
+                                        {% if ticket.status != 'in_progress' %}
+
+                                            <form
+                                                method="POST"
+                                                action="{% url 'update_support_ticket' ticket.id %}"
+                                            >
+
+                                                {% csrf_token %}
+
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="in_progress"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="ticket-btn ticket-progress"
+                                                >
+                                                    In Progress
+                                                </button>
+
+                                            </form>
+
+                                        {% endif %}
+
+
+                                        <form
+                                            method="POST"
+                                            action="{% url 'update_support_ticket' ticket.id %}"
+                                        >
+
+                                            {% csrf_token %}
+
+                                            <input
+                                                type="hidden"
+                                                name="action"
+                                                value="resolved"
+                                            >
+
+                                            <button
+                                                type="submit"
+                                                class="ticket-btn ticket-resolved"
+                                            >
+                                                ✓ Resolve
+                                            </button>
+
+                                        </form>
+
+                                    {% else %}
+
+                                        <span class="ticket-done">
+                                            ✓ Resolved
+                                        </span>
+
+                                    {% endif %}
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+    {% else %}
+
+        <div class="support-card">
+
+            <div style="
+                padding: 30px;
+                text-align: center;
+                color: #6b7280;
+            ">
+
+                <strong style="color: #111827;">
+                    No support tickets
+                </strong>
+
+                <p style="margin: 7px 0 0;">
+                    Shop support requests will appear here.
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+</section>
 <!-- =========================
      SEND NOTIFICATION
 ========================= -->
 
 <section class="section">
 
-    <h2 class="section-title">
-        Send Notification
-    </h2>
+    <div class="section-header">
+
+        <div>
+            <h2 class="section-title">
+                🔔 Send Notification
+            </h2>
+
+            <p class="section-subtitle">
+                Send important updates to one shop or all active shops.
+            </p>
+        </div>
+
+    </div>
+
 
     <div class="notification-admin-card">
 
@@ -590,6 +967,7 @@
             {% endfor %}
 
         {% endif %}
+
 
         <form method="POST">
 
@@ -607,6 +985,7 @@
 
                 </div>
 
+
                 <div class="form-group">
 
                     <label>
@@ -617,15 +996,17 @@
 
                 </div>
 
+
                 <div class="form-group">
 
                     <label>
-                        Type
+                        Notification Type
                     </label>
 
                     {{ notification_form.notification_type }}
 
                 </div>
+
 
                 <div class="form-group full-width">
 
@@ -636,6 +1017,7 @@
                     {{ notification_form.title }}
 
                 </div>
+
 
                 <div class="form-group full-width">
 
@@ -649,19 +1031,23 @@
 
             </div>
 
-            <button
-                type="submit"
-                class="send-notification-btn"
-            >
-                Send Notification
-            </button>
+
+            <div class="notification-actions">
+
+                <button
+                    type="submit"
+                    class="send-notification-btn"
+                >
+                    🔔 Send Notification
+                </button>
+
+            </div>
 
         </form>
 
     </div>
 
 </section>
-
 <!-- =========================
      SHOPS MANAGEMENT
 ========================== -->
@@ -865,5 +1251,6 @@
         </table>
 
     </div>
+    
 
 </section>

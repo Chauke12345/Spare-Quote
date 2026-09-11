@@ -22,7 +22,25 @@ from .forms import (
     ReviewForm,
     TrackRequestForm,
     AdminNotificationForm,
+    SupportTicketForm,
 )
+
+from .models import (
+    PartRequest,
+    Quote,
+    Shop,
+    Review,
+    Notification,
+    NotificationRead,
+    SupportTicket,
+)
+import io
+import qrcode
+
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+
+from .models import Shop
 
 
 
@@ -643,6 +661,63 @@ def shop_dashboard(request):
         }
     )
 
+# =========================================================
+# SHOP SUPPORT / NEED HELP
+# =========================================================
+
+@login_required(login_url='shop_login')
+def shop_support(request):
+
+    shop = get_object_or_404(
+        Shop,
+        user=request.user
+    )
+
+    if not shop.is_active:
+        messages.error(
+            request,
+            'Your SpareQuote account is currently inactive.'
+        )
+
+        return redirect('shop_login')
+
+    if request.method == 'POST':
+
+        form = SupportTicketForm(
+            request.POST
+        )
+
+        if form.is_valid():
+
+            ticket = form.save(
+                commit=False
+            )
+
+            ticket.shop = shop
+            ticket.save()
+
+            messages.success(
+                request,
+                'Your support request has been submitted successfully.'
+            )
+
+            return redirect(
+                'shop_dashboard'
+            )
+
+    else:
+
+        form = SupportTicketForm()
+
+    return render(
+        request,
+        'quotes/shop_support.html',
+        {
+            'form': form,
+            'shop': shop,
+        }
+    )
+
 
 # =========================================================
 # SPAREQUOTE ADMIN DASHBOARD
@@ -713,7 +788,7 @@ def admin_dashboard(request):
     )[:10]
 
 
-    # =========================================================
+      # =========================================================
     # SHOPS MANAGEMENT
     # =========================================================
 
@@ -721,6 +796,17 @@ def admin_dashboard(request):
         'user'
     ).order_by(
         'shop_name'
+    )
+
+
+    # =========================================================
+    # SUPPORT TICKETS
+    # =========================================================
+
+    support_tickets = SupportTicket.objects.select_related(
+        'shop'
+    ).order_by(
+        '-created_at'
     )
 
 
@@ -797,6 +883,8 @@ def admin_dashboard(request):
         'shops': shops,
 
         'notification_form': notification_form,
+
+        'support_tickets': support_tickets,
     }
 
     return render(
@@ -1328,3 +1416,115 @@ def update_shop_access(request, shop_id):
     shop.save()
 
     return redirect('admin_dashboard')
+
+# =========================================================
+# ADMIN - UPDATE SUPPORT TICKET STATUS
+# =========================================================
+
+@staff_member_required
+@require_POST
+def update_support_ticket(request, ticket_id):
+
+    ticket = get_object_or_404(
+        SupportTicket,
+        id=ticket_id
+    )
+
+    action = request.POST.get('action')
+
+    if action == 'in_progress':
+        ticket.status = 'in_progress'
+
+    elif action == 'resolved':
+        ticket.status = 'resolved'
+
+    ticket.save()
+
+    messages.success(
+        request,
+        f'Support ticket #{ticket.id} updated successfully.'
+    )
+
+    return redirect('admin_dashboard')
+
+# =========================================================
+# QR CODE - MARKETPLACE
+# =========================================================
+
+def marketplace_qr(request):
+
+    marketplace_url = request.build_absolute_uri('/')
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=10,
+        border=4,
+    )
+
+    qr.add_data(marketplace_url)
+    qr.make(fit=True)
+
+    image = qr.make_image(
+        fill_color='black',
+        back_color='white'
+    )
+
+    buffer = io.BytesIO()
+    image.save(buffer, format='PNG')
+
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type='image/png'
+    )
+
+    response['Content-Disposition'] = (
+        'inline; filename="sparequote-marketplace-qr.png"'
+    )
+
+    return response
+
+
+# =========================================================
+# QR CODE - PRIVATE SHOP
+# =========================================================
+
+def private_shop_qr(request, shop_id):
+
+    shop = get_object_or_404(
+        Shop,
+        id=shop_id
+    )
+
+    private_url = request.build_absolute_uri(
+        f'/shop-request/{shop.id}/'
+    )
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=10,
+        border=4,
+    )
+
+    qr.add_data(private_url)
+    qr.make(fit=True)
+
+    image = qr.make_image(
+        fill_color='black',
+        back_color='white'
+    )
+
+    buffer = io.BytesIO()
+    image.save(buffer, format='PNG')
+
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type='image/png'
+    )
+
+    response['Content-Disposition'] = (
+        f'inline; filename="{shop.shop_name}-private-qr.png"'
+    )
+
+    return response

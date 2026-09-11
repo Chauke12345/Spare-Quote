@@ -403,3 +403,55 @@ class NotificationRead(models.Model):
             f"{self.shop.shop_name} - "
             f"{self.notification.title}"
         )
+    
+class SupportTicket(models.Model):
+
+    STATUS_CHOICES = [
+        ('open', 'Open'),
+        ('in_progress', 'In Progress'),
+        ('resolved', 'Resolved'),
+    ]
+
+    CATEGORY_CHOICES = [
+        ('technical', 'Technical Problem'),
+        ('account', 'Account / Access'),
+        ('quotation', 'Quotation Problem'),
+        ('request', 'Customer Request Problem'),
+        ('billing', 'Billing / Subscription'),
+        ('other', 'Other'),
+    ]
+
+    shop = models.ForeignKey(
+        Shop,
+        on_delete=models.CASCADE,
+        related_name='support_tickets'
+    )
+
+    category = models.CharField(
+        max_length=30,
+        choices=CATEGORY_CHOICES,
+        default='technical'
+    )
+
+    subject = models.CharField(
+        max_length=150
+    )
+
+    message = models.TextField()
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='open'
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"{self.shop.shop_name} - {self.subject}"

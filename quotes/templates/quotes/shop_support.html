@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Need Help | SpareQuote</title>
+
+   <style>
+
+/* =========================
+   RESET
+========================= */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* =========================
+   PAGE
+========================= */
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f3f6f9;
+    color: #1f2937;
+}
+
+.page-wrapper {
+    width: 92%;
+    max-width: 720px;
+    margin: 50px auto;
+}
+
+
+/* =========================
+   SUPPORT CARD
+========================= */
+
+.support-card {
+    background: #ffffff;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+
+    padding: 30px;
+
+    box-shadow:
+        0 10px 28px rgba(15, 23, 42, 0.07);
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.support-header {
+    margin-bottom: 26px;
+}
+
+.support-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+
+    background: #eff6ff;
+    color: #1d4ed8;
+
+    padding: 7px 12px;
+
+    border-radius: 999px;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    margin-bottom: 14px;
+}
+
+.support-header h1 {
+    font-size: 30px;
+    color: #111827;
+
+    margin-bottom: 8px;
+}
+
+.support-header p {
+    color: #6b7280;
+
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+
+/* =========================
+   SHOP INFORMATION
+========================= */
+
+.shop-info {
+    margin-top: 16px;
+
+    padding: 12px 14px;
+
+    background: #f9fafb;
+
+    border: 1px solid #e5e7eb;
+    border-radius: 9px;
+
+    font-size: 13px;
+}
+
+.shop-info strong {
+    color: #111827;
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    color: #374151;
+}
+
+
+/* Django form fields */
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+
+    padding: 11px 12px;
+
+    background: #ffffff;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 14px;
+
+    color: #111827;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.form-group textarea {
+    min-height: 140px;
+    resize: vertical;
+}
+
+
+/* =========================
+   FORM ERRORS
+========================= */
+
+.form-errors {
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    background: #fef2f2;
+    color: #991b1b;
+
+    border: 1px solid #fecaca;
+    border-radius: 9px;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+.actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    flex-wrap: wrap;
+
+    margin-top: 24px;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 16px;
+
+    border-radius: 9px;
+    border: none;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+
+/* Submit button */
+
+.btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+}
+
+
+/* Back button */
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+
+    border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+    background: #e5e7eb;
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   SUPPORT NOTE
+========================= */
+
+.support-note {
+    margin-top: 22px;
+
+    padding: 12px 14px;
+
+    background: #f0fdf4;
+    color: #166534;
+
+    border: 1px solid #bbf7d0;
+    border-radius: 9px;
+
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .page-wrapper {
+        width: 94%;
+        margin: 24px auto;
+    }
+
+    .support-card {
+        padding: 20px;
+        border-radius: 14px;
+    }
+
+    .support-header h1 {
+        font-size: 25px;
+    }
+
+    .actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+</style>
+
+   
+<
+
+</head>
+
+
+<body>
+<div class="page-wrapper">
+
+    <div class="support-card">
+
+        <div class="support-header">
+
+            <div class="support-badge">
+                🛟 SpareQuote Support
+            </div>
+
+            <h1>
+                Need Help?
+            </h1>
+
+            <p>
+                Report a technical problem, account issue,
+                quotation issue or anything preventing you
+                from using SpareQuote correctly.
+            </p>
+
+            <div class="shop-info">
+                Logged in as:
+                <strong>
+                    {{ shop.shop_name }}
+                </strong>
+            </div>
+
+        </div>
+
+
+        {% if form.errors %}
+
+            <div class="form-errors">
+                Please check the information below and try again.
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <div class="form-group">
+
+                <label>
+                    Category
+                </label>
+
+                {{ form.category }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Subject
+                </label>
+
+                {{ form.subject }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label>
+                    Describe the Problem
+                </label>
+
+                {{ form.message }}
+
+            </div>
+
+
+            <div class="actions">
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    🛟 Submit Support Request
+                </button>
+
+                <a
+                    href="{% url 'shop_dashboard' %}"
+                    class="btn btn-secondary"
+                >
+                    ← Back to Dashboard
+                </a>
+
+            </div>
+
+        </form>
+
+
+        <div class="support-note">
+            ✓ Your support request will be sent directly to the SpareQuote administrator.
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

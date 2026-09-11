@@ -3,113 +3,100 @@ from . import views
 
 
 urlpatterns = [
+
     # =====================================================
     # CUSTOMER
     # =====================================================
 
-    # Request a spare part - Open Marketplace
     path(
         '',
         views.request_part,
         name='request_part'
     ),
 
-    # Request a spare part - Private Shop QR
     path(
         'shop-request/<int:shop_id>/',
         views.request_part,
         name='shop_request_part'
     ),
 
-    # Request success page
     path(
         'success/<uuid:public_id>/',
         views.request_success,
         name='request_success'
     ),
 
-    # Private customer request page
     path(
         'request/<uuid:public_id>/',
         views.request_detail,
         name='request_detail'
     ),
 
-    # Reopen expired request
     path(
         'request/<uuid:public_id>/reopen/',
         views.reopen_request,
         name='reopen_request'
     ),
 
-    # Accept supplier quotation
     path(
         'request/<uuid:public_id>/quote/<int:quote_id>/accept/',
         views.accept_quote,
         name='accept_quote'
     ),
 
-    # Submit customer review
     path(
         'request/<uuid:public_id>/review/',
         views.submit_review,
         name='submit_review'
     ),
 
-    # Track customer request
     path(
         'track/',
         views.track_request,
         name='track_request'
     ),
 
+
     # =====================================================
     # SHOP
     # =====================================================
 
-    # Shop registration
     path(
         'shop/register/',
         views.shop_register,
         name='shop_register'
     ),
 
-    # Shop login
     path(
         'shop/login/',
         views.shop_login,
         name='shop_login'
     ),
 
-    # Shop logout
     path(
         'shop/logout/',
         views.shop_logout,
         name='shop_logout'
     ),
 
-    # Shop dashboard
     path(
         'shop/dashboard/',
         views.shop_dashboard,
         name='shop_dashboard'
     ),
 
-    # Shop reviews
     path(
         'shop/reviews/',
         views.shop_reviews,
         name='shop_reviews'
     ),
 
-    # Submit / update quotation
     path(
         'shop/request/<int:request_id>/quote/',
         views.submit_quote,
         name='submit_quote'
     ),
 
-    # Mark accepted order as completed
     path(
         'shop/request/<int:request_id>/complete/',
         views.mark_completed,
@@ -117,20 +104,55 @@ urlpatterns = [
     ),
 
     path(
-    'sparequote-admin/',
-    views.admin_dashboard,
-    name='admin_dashboard'
-),
+        'shop/notification/<int:notification_id>/read/',
+        views.mark_notification_read,
+        name='mark_notification_read'
+    ),
 
-path(
-    'sparequote-admin/shop/<int:shop_id>/access/',
-    views.update_shop_access,
-    name='update_shop_access'
-),
+    path(
+        'shop/support/',
+        views.shop_support,
+        name='shop_support'
+    ),
 
-path(
-    'shop/notification/<int:notification_id>/read/',
-    views.mark_notification_read,
-    name='mark_notification_read'
-),
+
+    # =====================================================
+    # ADMIN
+    # =====================================================
+
+    path(
+        'sparequote-admin/',
+        views.admin_dashboard,
+        name='admin_dashboard'
+    ),
+
+    path(
+        'sparequote-admin/shop/<int:shop_id>/access/',
+        views.update_shop_access,
+        name='update_shop_access'
+    ),
+
+    path(
+        'sparequote-admin/support/<int:ticket_id>/update/',
+        views.update_support_ticket,
+        name='update_support_ticket'
+    ),
+
+
+    # =====================================================
+    # QR CODES
+    # =====================================================
+
+    path(
+        'qr/marketplace/',
+        views.marketplace_qr,
+        name='marketplace_qr'
+    ),
+
+    path(
+        'qr/shop/<int:shop_id>/',
+        views.private_shop_qr,
+        name='private_shop_qr'
+    ),
+
 ]

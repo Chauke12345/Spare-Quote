@@ -176,30 +176,35 @@
     border-left-color: #dc2626;
 }
 
-    .logout-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
+  .logout-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-        text-decoration: none;
+    text-decoration: none;
 
-        background: #ffffff;
-        color: #111827;
+    background: #ffffff;
+    color: #111827;
 
-        border: 1px solid #d1d5db;
+    border: 1px solid #d1d5db;
 
-        padding: 10px 16px;
-        border-radius: 9px;
+    padding: 10px 16px;
+    border-radius: 9px;
 
-        font-size: 13px;
-        font-weight: 700;
-    }
+    font-size: 13px;
+    font-weight: 700;
+}
 
-    .logout-btn:hover {
-        background: #f3f4f6;
-    }
+.logout-btn:hover {
+    background: #f3f4f6;
+}
 
-    .mark-read-form {
+
+/* =========================
+   MARK NOTIFICATION READ
+========================= */
+
+.mark-read-form {
     margin-top: 10px;
 }
 
@@ -222,9 +227,43 @@
     background: #d1d5db;
 }
 
-    /* =========================
-       SECTION HEADER
-    ========================= */
+
+/* =========================
+   SUPPORT BUTTON
+========================= */
+
+.support-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 15px;
+
+    background: #eff6ff;
+    color: #1d4ed8;
+
+    border: 1px solid #bfdbfe;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.support-btn:hover {
+    background: #dbeafe;
+    transform: translateY(-1px);
+}
+
+
+/* =========================
+   SECTION HEADER
+========================= */
 
     .section-header {
         display: flex;
@@ -1058,11 +1097,18 @@ a.quote-btn.whatsapp-btn:hover {
 
 
     <a
-        href="{% url 'shop_logout' %}"
-        class="logout-btn"
-    >
-        Logout
-    </a>
+    href="{% url 'shop_support' %}"
+    class="support-btn"
+>
+    🛟 Need Help?
+</a>
+
+<a
+    href="{% url 'shop_logout' %}"
+    class="logout-btn"
+>
+    Logout
+</a>
 
 </div>
 

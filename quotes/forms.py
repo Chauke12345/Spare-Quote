@@ -282,3 +282,45 @@ class AdminNotificationForm(forms.Form):
             ('maintenance', 'Maintenance'),
         ]
     )
+
+    from django import forms
+
+from .models import SupportTicket
+
+
+class SupportTicketForm(forms.ModelForm):
+
+    class Meta:
+        model = SupportTicket
+
+        fields = [
+            'category',
+            'subject',
+            'message',
+        ]
+
+        widgets = {
+            'category': forms.Select(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+
+            'subject': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Briefly describe the problem'
+                }
+            ),
+
+            'message': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 5,
+                    'placeholder': (
+                        'Describe what happened, what you were trying '
+                        'to do, and any error message you saw.'
+                    )
+                }
+            ),
+        }
