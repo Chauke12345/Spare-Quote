@@ -1,9 +1,21 @@
 from django.contrib import admin
-from .models import PartRequest, Quote, Shop
 
+from .models import (
+    PartRequest,
+    Quote,
+    Shop,
+    Notification,
+    NotificationRead,
+)
+
+
+# =========================================================
+# PART REQUEST ADMIN
+# =========================================================
 
 @admin.register(PartRequest)
 class PartRequestAdmin(admin.ModelAdmin):
+
     list_display = (
         'customer_name',
         'vehicle_make',
@@ -30,8 +42,13 @@ class PartRequestAdmin(admin.ModelAdmin):
     )
 
 
+# =========================================================
+# QUOTE ADMIN
+# =========================================================
+
 @admin.register(Quote)
 class QuoteAdmin(admin.ModelAdmin):
+
     list_display = (
         'shop_name',
         'part_request',
@@ -56,8 +73,13 @@ class QuoteAdmin(admin.ModelAdmin):
     )
 
 
+# =========================================================
+# SHOP ADMIN
+# =========================================================
+
 @admin.register(Shop)
 class ShopAdmin(admin.ModelAdmin):
+
     list_display = (
         'shop_name',
         'phone_number',
@@ -77,4 +99,47 @@ class ShopAdmin(admin.ModelAdmin):
         'phone_number',
         'email',
         'location',
+    )
+
+
+# =========================================================
+# NOTIFICATION ADMIN
+# =========================================================
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'id',
+        'title',
+        'shop',
+        'is_global',
+        'notification_type',
+        'created_at',
+    )
+
+    list_filter = (
+        'is_global',
+        'notification_type',
+        'created_at',
+    )
+
+    search_fields = (
+        'title',
+        'message',
+        'shop__shop_name',
+    )
+
+
+# =========================================================
+# NOTIFICATION READ ADMIN
+# =========================================================
+
+@admin.register(NotificationRead)
+class NotificationReadAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'id',
+        'notification',
+        'shop',
     )

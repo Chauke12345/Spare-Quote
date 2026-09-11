@@ -389,6 +389,18 @@
         </div>
 
     </div>
+    {% if part_request.status == 'pending' or part_request.status == 'quoted' or part_request.status == 'accepted' %}
+
+<script>
+    console.log("Customer auto-refresh started");
+
+    setTimeout(function () {
+        console.log("Refreshing customer page now...");
+        window.location.reload();
+    }, 15000);
+</script>
+
+{% endif %}
 
 </body>
 

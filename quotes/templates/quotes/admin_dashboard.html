@@ -1157,6 +1157,186 @@
 
 </section>
 
+<!-- =====================================================
+     SUPPORT TICKETS
+====================================================== -->
+
+<section class="section">
+
+    <div class="section-header">
+
+        <h2 class="section-title">
+            🛟 Support Tickets
+        </h2>
+
+        <p class="section-subtitle">
+            Help requests submitted by SpareQuote shops.
+        </p>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        {% if support_tickets %}
+
+            <div class="table-wrapper">
+
+                <table class="dashboard-table support-table">
+
+                    <thead>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Shop</th>
+                            <th>Category</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for ticket in support_tickets %}
+
+                            <tr>
+
+                                <td>
+                                    <span class="ticket-number">
+                                        #{{ ticket.id }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="ticket-shop">
+                                        {{ ticket.shop.shop_name }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ ticket.get_category_display }}
+                                </td>
+
+                                <td>
+                                    <span class="ticket-subject">
+                                        {{ ticket.subject }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div class="ticket-message">
+                                        {{ ticket.message }}
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="
+                                        status-badge
+                                        ticket-status-{{ ticket.status }}
+                                    ">
+                                        {{ ticket.get_status_display }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    {{ ticket.created_at|date:"d M Y, H:i" }}
+                                </td>
+
+                                <td>
+
+                                    <div class="ticket-actions">
+
+                                        {% if ticket.status != 'resolved' %}
+
+                                            {% if ticket.status != 'in_progress' %}
+
+                                                <form
+                                                    method="POST"
+                                                    action="{% url 'update_support_ticket' ticket.id %}"
+                                                >
+                                                    {% csrf_token %}
+
+                                                    <input
+                                                        type="hidden"
+                                                        name="action"
+                                                        value="in_progress"
+                                                    >
+
+                                                    <button
+                                                        type="submit"
+                                                        class="ticket-btn ticket-progress"
+                                                    >
+                                                        In Progress
+                                                    </button>
+                                                </form>
+
+                                            {% endif %}
+
+                                            <form
+                                                method="POST"
+                                                action="{% url 'update_support_ticket' ticket.id %}"
+                                            >
+                                                {% csrf_token %}
+
+                                                <input
+                                                    type="hidden"
+                                                    name="action"
+                                                    value="resolved"
+                                                >
+
+                                                <button
+                                                    type="submit"
+                                                    class="ticket-btn ticket-resolved"
+                                                >
+                                                    ✓ Resolve
+                                                </button>
+                                            </form>
+
+                                        {% else %}
+
+                                            <span class="ticket-done">
+                                                ✓ Resolved
+                                            </span>
+
+                                        {% endif %}
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <strong>
+                    No open support tickets
+                </strong>
+
+                Shop support requests will appear here when a shop uses Need Help.
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+    <div class="scroll-hint">
+        Swipe left or right to view ticket details.
+    </div>
+
+</section>
+
     <!-- =====================================================
          MANAGEMENT
     ====================================================== -->
