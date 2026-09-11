@@ -1345,121 +1345,141 @@
 
         <div class="management-grid">
 
+<!-- =================================================
+     NOTIFICATIONS
+================================================== -->
 
-            <!-- =================================================
-                 NOTIFICATIONS
-            ================================================== -->
+<div class="management-panel">
 
-            <div class="management-panel">
+    <div class="section-header">
 
-                <div class="section-header">
+        <h2 class="section-title">
+            🔔 Send Notification
+        </h2>
 
-                    <h2 class="section-title">
-                        🔔 Send Notification
-                    </h2>
+        <p class="section-subtitle">
+            Send updates to one shop or all active shops.
+        </p>
 
-                    <p class="section-subtitle">
-                        Send updates to one shop or all active shops.
-                    </p>
+    </div>
+
+
+    <div class="notification-card">
+
+        {% if messages %}
+
+            {% for message in messages %}
+
+                <div class="admin-message">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+
+        {% if notification_form.errors %}
+
+            <div style="
+                background: #fef2f2;
+                color: #b91c1c;
+                border: 1px solid #fecaca;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 15px;
+            ">
+
+                <strong>
+                    Notification could not be sent.
+                </strong>
+
+                {{ notification_form.errors }}
+
+            </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+            <div class="notification-form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        Send To
+                    </label>
+
+                    {{ notification_form.send_to }}
 
                 </div>
 
 
-                <div class="notification-card">
+                <div class="form-group">
 
-                    {% if messages %}
+                    <label>
+                        Shop
+                    </label>
 
-                        {% for message in messages %}
+                    {{ notification_form.shop }}
 
-                            <div class="admin-message">
-                                {{ message }}
-                            </div>
-
-                        {% endfor %}
-
-                    {% endif %}
+                </div>
 
 
-                    <form method="POST">
+                <div class="form-group full-width">
 
-                        {% csrf_token %}
+                    <label>
+                        Notification Type
+                    </label>
 
-                        <div class="notification-form-grid">
+                    {{ notification_form.notification_type }}
 
-                            <div class="form-group">
-
-                                <label>
-                                    Send To
-                                </label>
-
-                                {{ notification_form.send_to }}
-
-                            </div>
+                </div>
 
 
-                            <div class="form-group">
+                <div class="form-group full-width">
 
-                                <label>
-                                    Shop
-                                </label>
+                    <label>
+                        Title
+                    </label>
 
-                                {{ notification_form.shop }}
+                    {{ notification_form.title }}
 
-                            </div>
-
-
-                            <div class="form-group full-width">
-
-                                <label>
-                                    Notification Type
-                                </label>
-
-                                {{ notification_form.notification_type }}
-
-                            </div>
+                </div>
 
 
-                            <div class="form-group full-width">
+                <div class="form-group full-width">
 
-                                <label>
-                                    Title
-                                </label>
+                    <label>
+                        Message
+                    </label>
 
-                                {{ notification_form.title }}
-
-                            </div>
-
-
-                            <div class="form-group full-width">
-
-                                <label>
-                                    Message
-                                </label>
-
-                                {{ notification_form.message }}
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="notification-actions">
-
-                            <button
-                                type="submit"
-                                class="send-notification-btn"
-                            >
-                                🔔 Send Notification
-                            </button>
-
-                        </div>
-
-                    </form>
+                    {{ notification_form.message }}
 
                 </div>
 
             </div>
 
+
+            <div class="notification-actions">
+
+                <button
+                    type="submit"
+                    class="send-notification-btn"
+                >
+                    🔔 Send Notification
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
 
             <!-- =================================================
                  SHOPS MANAGEMENT

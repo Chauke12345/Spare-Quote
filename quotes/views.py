@@ -793,7 +793,6 @@ def admin_dashboard(request):
         '-created_at'
     )
 
-
     # =========================================================
     # SHOP PERFORMANCE
     # =========================================================
@@ -834,7 +833,7 @@ def admin_dashboard(request):
 
 
     # =========================================================
-    # CONTINUE WITH YOUR EXISTING CODE BELOW
+    # RECENT REQUESTS
     # =========================================================
 
     recent_requests = PartRequest.objects.select_related(
@@ -844,7 +843,7 @@ def admin_dashboard(request):
     )[:10]
 
 
-      # =========================================================
+    # =========================================================
     # SHOPS MANAGEMENT
     # =========================================================
 
@@ -857,10 +856,16 @@ def admin_dashboard(request):
 
     # =========================================================
     # SUPPORT TICKETS
+    # Only show tickets that still need attention.
     # =========================================================
 
     support_tickets = SupportTicket.objects.select_related(
         'shop'
+    ).filter(
+        status__in=[
+            'open',
+            'in_progress',
+        ]
     ).order_by(
         '-created_at'
     )
@@ -882,9 +887,12 @@ def admin_dashboard(request):
             selected_shop = notification_form.cleaned_data['shop']
             title = notification_form.cleaned_data['title']
             message_text = notification_form.cleaned_data['message']
-            notification_type = notification_form.cleaned_data[
-                'notification_type'
-            ]
+
+            notification_type = (
+                notification_form.cleaned_data[
+                    'notification_type'
+                ]
+            )
 
             if send_to == 'all':
 
@@ -912,8 +920,16 @@ def admin_dashboard(request):
 
             return redirect('admin_dashboard')
 
+        else:
 
-      # =========================================================
+            messages.error(
+                request,
+                f'Notification could not be sent: '
+                f'{notification_form.errors.as_text()}'
+            )
+
+
+    # =========================================================
     # CONTEXT
     # =========================================================
 
@@ -945,12 +961,16 @@ def admin_dashboard(request):
         'shop_performance': shop_performance,
     }
 
+
+    # =========================================================
+    # RENDER ADMIN DASHBOARD
+    # =========================================================
+
     return render(
         request,
         'quotes/admin_dashboard.html',
         context
     )
-
 
 @login_required(login_url='shop_login')
 @require_POST
