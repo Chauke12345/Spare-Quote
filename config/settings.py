@@ -200,12 +200,14 @@ STORAGES = {
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = Path(
-    os.environ.get(
-        'RAILWAY_VOLUME_MOUNT_PATH',
-        BASE_DIR / 'media'
-    )
+RAILWAY_VOLUME_MOUNT_PATH = os.environ.get(
+    'RAILWAY_VOLUME_MOUNT_PATH'
 )
+
+if RAILWAY_VOLUME_MOUNT_PATH:
+    MEDIA_ROOT = Path(RAILWAY_VOLUME_MOUNT_PATH)
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 
 # =========================================================

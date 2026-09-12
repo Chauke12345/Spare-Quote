@@ -451,27 +451,57 @@
         padding: 15px;
     }
 
+    /* =========================
+       MOBILE NAVIGATION
+    ========================= */
+
     .main-header-inner {
-        padding: 12px 15px;
-        gap: 12px;
+        padding: 12px 14px;
+        gap: 10px;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .header-brand {
-        font-size: 18px;
+        display: block;
+        font-size: 19px;
+        font-weight: 800;
+        text-align: center;
     }
 
     .header-nav {
-        gap: 8px;
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-wrap: wrap;
+
+        gap: 8px 12px;
     }
 
     .header-nav a {
-        display: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+
+        font-size: 12px;
+        font-weight: 600;
+
+        white-space: nowrap;
     }
 
     .header-nav .shop-login-link {
         display: inline-flex;
-        padding: 9px 13px;
-        font-size: 13px;
+
+        padding: 8px 11px;
+        font-size: 12px;
+
+        border-radius: 7px;
     }
 
 }
