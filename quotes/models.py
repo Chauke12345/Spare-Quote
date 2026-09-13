@@ -92,19 +92,46 @@ class PartRequest(models.Model):
     )
 
     vehicle_make = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True
     )
 
     vehicle_model = models.CharField(
-        max_length=100
+        max_length=100,
+        blank=True
     )
 
-    vehicle_year = models.PositiveIntegerField()
+    vehicle_year = models.PositiveIntegerField(
+        blank=True,
+        null=True
+    )
 
     engine_details = models.CharField(
         max_length=100,
         blank=True,
         help_text="Example: 1.6 petrol, 2.0 TDI, 1.4 TSI"
+    )
+
+    # =========================================================
+    # VEHICLE LICENCE DISC
+    # =========================================================
+
+    VEHICLE_INPUT_CHOICES = [
+        ('manual', 'Enter Vehicle Details'),
+        ('disc', 'Upload Licence Disc'),
+    ]
+
+    vehicle_input_method = models.CharField(
+        max_length=20,
+        choices=VEHICLE_INPUT_CHOICES,
+        default='manual'
+    )
+
+    licence_disc_image = models.ImageField(
+        upload_to='licence_discs/',
+        blank=True,
+        null=True,
+        help_text='Upload a clear photo of the vehicle licence disc'
     )
 
     # =========================================================

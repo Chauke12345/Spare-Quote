@@ -1,29 +1,36 @@
-from django.shortcuts import render, redirect, get_object_or_404
-
-from django.views.decorators.http import require_POST
-
-from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-
 from datetime import timedelta
+import io
 
-from django.utils import timezone
+import qrcode
+
+from django.contrib import messages
+from django.contrib.auth import (
+    authenticate,
+    login,
+    logout,
+    update_session_auth_hash,
+)
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
 from django.db import transaction
 from django.db.models import Q, Avg
 
-from .models import PartRequest, Quote, Shop, Review, Notification, NotificationRead
+from django.http import HttpResponse
 
-from .forms import (
-    PartRequestForm,
-    QuoteForm,
-    ShopRegistrationForm,
-    ReviewForm,
-    TrackRequestForm,
-    AdminNotificationForm,
-    SupportTicketForm,
+from django.shortcuts import (
+    render,
+    redirect,
+    get_object_or_404,
 )
+
+from django.utils import timezone
+from django.views.decorators.http import require_POST
+
+
+# =========================================================
+# MODELS
+# =========================================================
 
 from .models import (
     PartRequest,
@@ -34,14 +41,22 @@ from .models import (
     NotificationRead,
     SupportTicket,
 )
-import io
-import qrcode
 
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404
 
-from .models import Shop
+# =========================================================
+# FORMS
+# =========================================================
 
+from .forms import (
+    PartRequestForm,
+    QuoteForm,
+    ShopRegistrationForm,
+    ReviewForm,
+    TrackRequestForm,
+    AdminNotificationForm,
+    SupportTicketForm,
+    ShopPasswordChangeForm,
+)
 
 
 # =========================================================
@@ -1620,4 +1635,43 @@ def request_done(request):
     return render(
         request,
         'quotes/request_done.html'
+    )
+@login_required(login_url='shop_login')
+def shop_change_password(request):
+
+    if request.method == 'POST':
+
+        form = ShopPasswordChangeForm(
+            user=request.user,
+            data=request.POST
+        )
+
+        if form.is_valid():
+
+            user = form.save()
+
+            update_session_auth_hash(
+                request,
+                user
+            )
+
+            messages.success(
+                request,
+                'Your password was changed successfully.'
+            )
+
+            return redirect('shop_dashboard')
+
+    else:
+
+        form = ShopPasswordChangeForm(
+            user=request.user
+        )
+
+    return render(
+        request,
+        'quotes/shop_change_password.html',
+        {
+            'form': form
+        }
     )

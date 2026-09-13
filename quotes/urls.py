@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 
+
 urlpatterns = [
 
     # =====================================================
@@ -56,8 +57,7 @@ urlpatterns = [
         name='track_request'
     ),
 
-
-   # =====================================================
+# =====================================================
 # SHOP
 # =====================================================
 
@@ -77,6 +77,12 @@ path(
     'shop/dashboard/',
     views.shop_dashboard,
     name='shop_dashboard'
+),
+
+path(
+    'shop/change-password/',
+    views.shop_change_password,
+    name='shop_change_password'
 ),
 
 path(

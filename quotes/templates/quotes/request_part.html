@@ -389,12 +389,139 @@
     text-decoration: underline;
 }
 
+/* =========================
+   VEHICLE INPUT METHOD
+========================= */
+
+.vehicle-method-wrapper {
+    margin-bottom: 28px;
+}
+
+.vehicle-method-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #374151;
+    margin-bottom: 14px;
+}
+
+.vehicle-method-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.vehicle-method-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    cursor: pointer;
+    background: #ffffff;
+    transition: 0.2s ease;
+    margin-bottom: 0;
+}
+
+.vehicle-method-card:hover {
+    border-color: #93c5fd;
+    background: #f8fbff;
+}
+
+.vehicle-method-card input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.vehicle-method-card:has(input:checked) {
+    border-color: #2563eb;
+    background: #eff6ff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.08);
+}
+
+.vehicle-method-icon {
+    font-size: 30px;
+    flex-shrink: 0;
+}
+
+.vehicle-method-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.vehicle-method-content strong {
+    color: #111827;
+    font-size: 15px;
+}
+
+.vehicle-method-content small {
+    color: #6b7280;
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 3px;
+    line-height: 1.4;
+}
+
+
+/* =========================
+   LICENCE DISC UPLOAD
+========================= */
+
+#licenceDiscFields {
+    display: none;
+}
+
+.licence-disc-box {
+    background: #f8fafc;
+    border: 2px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+}
+
+.licence-disc-icon {
+    font-size: 38px;
+    margin-bottom: 8px;
+}
+
+.licence-disc-heading {
+    font-size: 17px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 5px;
+}
+
+.licence-disc-box p {
+    color: #6b7280;
+    font-size: 13px;
+    max-width: 520px;
+    margin: 0 auto 20px;
+}
+
+.licence-disc-box .form-group {
+    text-align: left;
+}
+
 
 /* =========================
    MOBILE
 ========================= */
 
 @media (max-width: 700px) {
+
+    .vehicle-method-options {
+    grid-template-columns: 1fr;
+}
+
+.vehicle-method-card {
+    padding: 16px;
+}
+
+.licence-disc-box {
+    padding: 20px 15px;
+}
 
     .page-wrapper {
         width: 94%;
@@ -450,6 +577,7 @@
     .submit-btn {
         padding: 15px;
     }
+
 
     /* =========================
        MOBILE NAVIGATION
@@ -672,98 +800,217 @@
                 <!-- =========================
                      VEHICLE DETAILS
                 ========================= -->
+                <!-- =========================
+     VEHICLE DETAILS
+========================= -->
 
-                <div class="form-section">
+<div class="form-section">
 
-                    <div class="section-heading">
+    <div class="section-heading">
 
-                        <div class="section-icon">
-                            🚗
-                        </div>
+        <div class="section-icon">
+            🚗
+        </div>
 
-                        <div>
-                            <h2>Vehicle Details</h2>
-                            <p>
-                                Help the shop identify the correct part for your vehicle.
-                            </p>
-                        </div>
+        <div>
+            <h2>Vehicle Details</h2>
+            <p>
+                Choose how you would like to provide your vehicle information.
+            </p>
+        </div>
 
-                    </div>
-
-
-                    <div class="form-grid">
-
-                        <div class="form-group">
-
-                            <label for="{{ form.vehicle_make.id_for_label }}">
-                                Vehicle Make
-                            </label>
-
-                            {{ form.vehicle_make.errors }}
-                            {{ form.vehicle_make }}
-
-                        </div>
+    </div>
 
 
-                        <div class="form-group">
+    <!-- VEHICLE METHOD -->
 
-                            <label for="{{ form.vehicle_model.id_for_label }}">
-                                Vehicle Model
-                            </label>
+    <div class="vehicle-method-wrapper">
 
-                            {{ form.vehicle_model.errors }}
-                            {{ form.vehicle_model }}
+        <p class="vehicle-method-title">
+            How would you like to provide your vehicle details?
+        </p>
 
-                        </div>
+        {{ form.vehicle_input_method.errors }}
 
+        <div class="vehicle-method-options">
 
-                        <div class="form-group">
+            <label class="vehicle-method-card">
 
-                            <label for="{{ form.vehicle_year.id_for_label }}">
-                                Vehicle Year
-                            </label>
+                <input
+                    type="radio"
+                    name="vehicle_input_method"
+                    value="manual"
+                    {% if form.vehicle_input_method.value != "disc" %}
+                        checked
+                    {% endif %}
+                >
 
-                            {{ form.vehicle_year.errors }}
-                            {{ form.vehicle_year }}
+                <span class="vehicle-method-icon">
+                    ✍️
+                </span>
 
-                        </div>
+                <span class="vehicle-method-content">
+                    <strong>Enter Vehicle Details</strong>
+                    <small>
+                        Enter the make, model, year and other vehicle information.
+                    </small>
+                </span>
 
-
-                        <div class="form-group">
-
-                            <label for="{{ form.engine_details.id_for_label }}">
-                                Engine Details
-                            </label>
-
-                            {{ form.engine_details.errors }}
-                            {{ form.engine_details }}
-
-                            <span class="help-text">
-                                Example: 1.6 petrol, 2.0 TDI or 320d diesel.
-                            </span>
-
-                        </div>
+            </label>
 
 
-                        <div class="form-group full-width">
+            <label class="vehicle-method-card">
 
-                            <label for="{{ form.vin_number.id_for_label }}">
-                                VIN Number
-                            </label>
+                <input
+                    type="radio"
+                    name="vehicle_input_method"
+                    value="disc"
+                    {% if form.vehicle_input_method.value == "disc" %}
+                        checked
+                    {% endif %}
+                >
 
-                            {{ form.vin_number.errors }}
-                            {{ form.vin_number }}
+                <span class="vehicle-method-icon">
+                    📷
+                </span>
 
-                            <span class="help-text">
-                                Optional. A VIN is usually a 17-character
-                                vehicle identification number.
-                            </span>
+                <span class="vehicle-method-content">
+                    <strong>Upload Licence Disc</strong>
+                    <small>
+                        Take or upload a clear photo of your vehicle licence disc.
+                    </small>
+                </span>
 
-                        </div>
+            </label>
 
-                    </div>
+        </div>
 
-                </div>
+    </div>
+
+
+    <!-- =========================
+         MANUAL VEHICLE DETAILS
+    ========================= -->
+
+    <div id="manualVehicleFields">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+
+                <label for="{{ form.vehicle_make.id_for_label }}">
+                    Vehicle Make
+                </label>
+
+                {{ form.vehicle_make.errors }}
+                {{ form.vehicle_make }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="{{ form.vehicle_model.id_for_label }}">
+                    Vehicle Model
+                </label>
+
+                {{ form.vehicle_model.errors }}
+                {{ form.vehicle_model }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="{{ form.vehicle_year.id_for_label }}">
+                    Vehicle Year
+                </label>
+
+                {{ form.vehicle_year.errors }}
+                {{ form.vehicle_year }}
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label for="{{ form.engine_details.id_for_label }}">
+                    Engine Details
+                </label>
+
+                {{ form.engine_details.errors }}
+                {{ form.engine_details }}
+
+                <span class="help-text">
+                    Example: 1.6 petrol, 2.0 TDI or 320d diesel.
+                </span>
+
+            </div>
+
+
+            <div class="form-group full-width">
+
+                <label for="{{ form.vin_number.id_for_label }}">
+                    VIN Number
+                </label>
+
+                {{ form.vin_number.errors }}
+                {{ form.vin_number }}
+
+                <span class="help-text">
+                    Optional. A VIN is usually a 17-character
+                    vehicle identification number.
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         LICENCE DISC
+    ========================= -->
+
+    <div id="licenceDiscFields">
+
+        <div class="licence-disc-box">
+
+            <div class="licence-disc-icon">
+                📷
+            </div>
+
+            <div class="licence-disc-heading">
+                Upload Vehicle Licence Disc
+            </div>
+
+            <p>
+                Take a clear photo showing the entire licence disc.
+                Make sure the information and barcode are visible.
+            </p>
+
+            <div class="form-group">
+
+                <label for="{{ form.licence_disc_image.id_for_label }}">
+                    Licence Disc Photo
+                </label>
+
+                {{ form.licence_disc_image.errors }}
+                {{ form.licence_disc_image }}
+
+            </div>
+
+            <span class="help-text">
+                You can take a photo using your phone camera
+                or choose an existing photo.
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
 
 
                 <!-- =========================
@@ -897,6 +1144,58 @@
         Management Login
     </a>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const methodInputs = document.querySelectorAll(
+        'input[name="vehicle_input_method"]'
+    );
+
+    const manualFields = document.getElementById(
+        'manualVehicleFields'
+    );
+
+    const discFields = document.getElementById(
+        'licenceDiscFields'
+    );
+
+    function updateVehicleMethod() {
+
+        const selected = document.querySelector(
+            'input[name="vehicle_input_method"]:checked'
+        );
+
+        if (!selected) {
+            return;
+        }
+
+        if (selected.value === 'disc') {
+
+            manualFields.style.display = 'none';
+            discFields.style.display = 'block';
+
+        } else {
+
+            manualFields.style.display = 'block';
+            discFields.style.display = 'none';
+
+        }
+    }
+
+    methodInputs.forEach(function (input) {
+
+        input.addEventListener(
+            'change',
+            updateVehicleMethod
+        );
+
+    });
+
+    updateVehicleMethod();
+
+});
+</script>
 
 </body>
 </html>

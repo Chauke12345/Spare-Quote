@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 
 from .models import (
     PartRequest,
@@ -8,11 +9,6 @@ from .models import (
     Shop,
     SupportTicket,
 )
-
-
-# =========================================================
-# PART REQUEST FORM
-# =========================================================
 
 class PartRequestForm(forms.ModelForm):
 
@@ -23,17 +19,26 @@ class PartRequestForm(forms.ModelForm):
             'customer_name',
             'phone_number',
             'location',
+
+            # Vehicle input choice
+            'vehicle_input_method',
+            'licence_disc_image',
+
+            # Manual vehicle details
             'vin_number',
             'vehicle_make',
             'vehicle_model',
             'vehicle_year',
             'engine_details',
+
+            # Part details
             'part_name',
             'part_description',
             'part_image',
         ]
 
         widgets = {
+
             'customer_name': forms.TextInput(attrs={
                 'placeholder': 'e.g. Eddie Chauke'
             }),
@@ -45,6 +50,21 @@ class PartRequestForm(forms.ModelForm):
             'location': forms.TextInput(attrs={
                 'placeholder': 'e.g. Randburg, Johannesburg'
             }),
+
+            # =====================================================
+            # VEHICLE INPUT METHOD
+            # =====================================================
+
+            'vehicle_input_method': forms.RadioSelect(),
+
+            'licence_disc_image': forms.ClearableFileInput(attrs={
+                'accept': 'image/*',
+                'capture': 'environment'
+            }),
+
+            # =====================================================
+            # MANUAL VEHICLE DETAILS
+            # =====================================================
 
             'vin_number': forms.TextInput(attrs={
                 'placeholder': 'Enter VIN number if available'
@@ -66,6 +86,10 @@ class PartRequestForm(forms.ModelForm):
                 'placeholder': 'e.g. 1.6 Petrol'
             }),
 
+            # =====================================================
+            # PART DETAILS
+            # =====================================================
+
             'part_name': forms.TextInput(attrs={
                 'placeholder': 'e.g. Front brake pads'
             }),
@@ -81,7 +105,72 @@ class PartRequestForm(forms.ModelForm):
             }),
         }
 
+    # =========================================================
+    # VALIDATE VEHICLE INPUT METHOD
+    # =========================================================
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        input_method = cleaned_data.get(
+            'vehicle_input_method'
+        )
+
+        licence_disc = cleaned_data.get(
+            'licence_disc_image'
+        )
+
+        vehicle_make = cleaned_data.get(
+            'vehicle_make'
+        )
+
+        vehicle_model = cleaned_data.get(
+            'vehicle_model'
+        )
+
+        vehicle_year = cleaned_data.get(
+            'vehicle_year'
+        )
+
+        # Customer selected manual vehicle details
+        if input_method == 'manual':
+
+            if not vehicle_make:
+                self.add_error(
+                    'vehicle_make',
+                    'Please enter the vehicle make.'
+                )
+
+            if not vehicle_model:
+                self.add_error(
+                    'vehicle_model',
+                    'Please enter the vehicle model.'
+                )
+
+            if not vehicle_year:
+                self.add_error(
+                    'vehicle_year',
+                    'Please enter the vehicle year.'
+                )
+
+        # Customer selected licence disc
+        elif input_method == 'disc':
+
+            if not licence_disc:
+                self.add_error(
+                    'licence_disc_image',
+                    'Please upload a clear photo of the vehicle licence disc.'
+                )
+
+        return cleaned_data
+
+    # =========================================================
+    # PHONE NUMBER VALIDATION
+    # =========================================================
+
     def clean_phone_number(self):
+
         phone_number = self.cleaned_data.get(
             'phone_number',
             ''
@@ -419,3 +508,36 @@ class SupportTicketForm(forms.ModelForm):
                 )
             }),
         }
+
+
+class ShopPasswordChangeForm(PasswordChangeForm):
+
+    old_password = forms.CharField(
+        label="Current password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter current password"
+            }
+        )
+    )
+
+    new_password1 = forms.CharField(
+        label="New password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter new password"
+            }
+        )
+    )
+
+    new_password2 = forms.CharField(
+        label="Confirm new password",
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Confirm new password"
+            }
+        )
+    )
