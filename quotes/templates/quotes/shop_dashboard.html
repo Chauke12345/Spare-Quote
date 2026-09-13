@@ -744,88 +744,147 @@
     }
 
     /* =========================
-       MOBILE
-    ========================= */
+   MOBILE
+========================= */
 
-    @media (max-width: 750px) {
+@media (max-width: 750px) {
 
-        .page-wrapper {
-            width: 94%;
-            margin: 24px auto 45px;
-        }
-
-        .top-brand {
-            margin-bottom: 18px;
-        }
-
-        .page-header {
-            flex-direction: column;
-            padding: 22px 18px;
-        }
-
-        .header-title h1 {
-            font-size: 27px;
-        }
-
-        .header-actions {
-            width: 100%;
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .notification-box,
-        .logout-btn {
-            width: 100%;
-            justify-content: center;
-            text-align: center;
-        }
-
-        .section-header {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .history-filters {
-            width: 100%;
-        }
-
-        .history-filter-btn {
-            flex: 1;
-            text-align: center;
-        }
-
-        .request-summary,
-        .history-summary {
-            grid-template-columns: 1fr;
-            gap: 10px;
-        }
-
-        .request-status-area {
-            justify-content: space-between;
-            width: 100%;
-        }
-
-        .details-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .part-image img {
-            width: 100%;
-            max-width: 360px;
-            height: auto;
-        }
-
-              .quote-btn,
-        .update-quote-btn,
-        .quote-submitted,
-        .closed-label {
-            width: 100%;
-            text-align: center;
-            justify-content: center;
-        }
-
+    /* PAGE */
+    .page-wrapper {
+        width: 94%;
+        margin: 24px auto 45px;
     }
-    
+
+    .top-brand {
+        margin-bottom: 18px;
+    }
+
+
+    /* HEADER */
+    .page-header {
+        flex-direction: column;
+        padding: 22px 18px;
+    }
+
+    .header-title h1 {
+        font-size: 27px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .notification-box,
+    .support-btn,
+    .logout-btn,
+    .change-password-btn {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .change-password-btn {
+        padding: 11px 14px;
+    }
+
+
+    /* SECTION HEADERS */
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+
+    /* HISTORY FILTERS */
+    .history-filters {
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+    }
+
+    .history-filter-btn {
+        width: 100%;
+        text-align: center;
+    }
+
+
+    /* REQUEST CARDS */
+    .request-summary,
+    .history-summary {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 16px;
+    }
+
+    .request-status-area {
+        width: 100%;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+
+    /* REQUEST DETAILS */
+    .details-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .request-content,
+    .history-content {
+        padding: 16px;
+    }
+
+
+    /* IMAGES */
+    .part-image img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+
+    /* ACTION BUTTONS */
+    .quote-btn,
+    .update-quote-btn,
+    .quote-submitted,
+    .closed-label,
+    .complete-btn,
+    .whatsapp-btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .request-actions {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    /* SHOP BRAND */
+    .shop-brand {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px;
+        gap: 16px;
+    }
+
+    .shop-brand-main {
+        width: 100%;
+        align-items: flex-start;
+    }
+
+    .powered-by {
+        align-self: flex-start;
+    }
+
+}
 
 /* =========================
    WHATSAPP BUTTON
@@ -946,6 +1005,43 @@ a.quote-btn.whatsapp-btn:hover {
 
     letter-spacing: 0.4px;
 }
+/* =========================
+   CHANGE PASSWORD BUTTON
+========================= */
+
+.change-password-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    padding: 10px 16px;
+
+    background: #ffffff;
+    color: #374151;
+
+    border: 1px solid #d1d5db;
+    border-radius: 9px;
+
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition: all 0.2s ease;
+}
+
+.change-password-btn:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+    color: #111827;
+    transform: translateY(-1px);
+}
+
+.change-password-btn:active {
+    transform: translateY(0);
+}
+
+
 </style>
         
 
@@ -1112,8 +1208,7 @@ a.quote-btn.whatsapp-btn:hover {
         </div>
 
     {% endif %}
-
-    <a href="{% url 'shop_change_password' %}">
+<a href="{% url 'shop_change_password' %}" class="change-password-btn">
     🔑 Change Password
 </a>
 
