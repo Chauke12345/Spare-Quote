@@ -1502,25 +1502,48 @@ a.quote-btn.whatsapp-btn:hover {
                 {% endif %}
 
 
-                <!-- PART IMAGE -->
+                <!-- =====================================================
+     CUSTOMER PART IMAGE
+===================================================== -->
 
-                {% if part_request.part_image %}
+{% if part_request.part_image %}
 
-                    <div class="part-image">
+    <div class="part-image">
 
-                        <span class="part-image-title">
-                            Customer Photo
-                        </span>
+        <span class="part-image-title">
+            📷 Customer Part Photo
+        </span>
 
-                        <img
-                            src="{{ part_request.part_image.url }}"
-                            alt="{{ part_request.part_name }}"
-                        >
+        <img
+            src="{{ part_request.part_image.url }}"
+            alt="{{ part_request.part_name }}"
+        >
 
-                    </div>
+    </div>
 
-                {% endif %}
+{% endif %}
 
+
+<!-- =====================================================
+     VEHICLE LICENCE DISC
+===================================================== -->
+
+{% if part_request.licence_disc_image %}
+
+    <div class="part-image">
+
+        <span class="part-image-title">
+            🚗 Vehicle Licence Disc
+        </span>
+
+        <img
+            src="{{ part_request.licence_disc_image.url }}"
+            alt="Vehicle licence disc"
+        >
+
+    </div>
+
+{% endif %}
 
                 <!-- ACTION -->
 
